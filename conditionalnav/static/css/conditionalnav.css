@@ -1,0 +1,9 @@
+/* CSS for ConditionalNavigatorXBlock */
+
+.conditionalnav_block .count {
+    font-weight: bold;
+}
+
+.conditionalnav_block p {
+    cursor: pointer;
+}
