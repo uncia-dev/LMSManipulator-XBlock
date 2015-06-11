@@ -25,9 +25,11 @@
       <file leaf-file-name="conditionalnav.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/conditionalnav/conditionalnav.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="56" selection-start-line="0" selection-start-column="56" selection-end-line="0" selection-end-column="56" />
-              <folding />
+            <state vertical-scroll-proportion="0.41992188">
+              <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
+              <folding>
+                <element signature="e#58#78#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,7 +78,7 @@
         <entry file="file://$PROJECT_DIR$/conditionalnav/static/js/conditionalnav.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -100,6 +102,7 @@
         <option value="Html5" />
         <option value="CSS File" />
         <option value="JavaScript File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -109,9 +112,10 @@
         <option value="$PROJECT_DIR$/conditionalnav/templates/conditionalnav_edit.html" />
         <option value="$PROJECT_DIR$/conditionalnav/static/css/conditional_nav_edit.css" />
         <option value="$PROJECT_DIR$/conditionalnav/static/js/conditionalnav_edit.js" />
-        <option value="$PROJECT_DIR$/conditionalnav/conditionalnav.py" />
         <option value="$PROJECT_DIR$/conditionalnav/static/css/conditionalnav.css" />
         <option value="$PROJECT_DIR$/conditionalnav/static/js/conditionalnav.js" />
+        <option value="$PROJECT_DIR$/conditionalnav/utils.py" />
+        <option value="$PROJECT_DIR$/conditionalnav/conditionalnav.py" />
       </list>
     </option>
   </component>
@@ -123,9 +127,9 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1919" />
+    <option name="x" value="-1" />
     <option name="width" value="1922" />
-    <option name="height" value="1081" />
+    <option name="height" value="1169" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -270,7 +274,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ComplexHTML-XBlock" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
   </component>
@@ -472,7 +476,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1919" y="0" width="1922" height="1081" extended-state="6" />
+    <frame x="-1" y="0" width="1922" height="1169" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2550586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -516,7 +520,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#58#78#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -548,7 +554,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#58#78#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -619,16 +627,28 @@
     <entry file="file://$PROJECT_DIR$/conditionalnav/static/js/conditionalnav.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conditionalnav/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.66796875">
+          <caret line="38" column="30" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="30" />
+          <folding>
+            <element signature="e#98#112#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/conditionalnav/conditionalnav.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="56" selection-start-line="0" selection-start-column="56" selection-end-line="0" selection-end-column="56" />
-          <folding />
+        <state vertical-scroll-proportion="0.41992188">
+          <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
+          <folding>
+            <element signature="e#58#78#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

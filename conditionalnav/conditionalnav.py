@@ -1,32 +1,37 @@
 """TO-DO: Write a description of what this XBlock is."""
 
 import pkg_resources
+import urllib, datetime, json
+import csv
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Integer
+from xblock.fields import Scope, Integer, List, String, Dict
 from xblock.fragment import Fragment
 
+from django.template import Context, Template
+from .utils import render_template, load_resource, resource_string
 
 class ConditionalNavigatorXBlock(XBlock):
-    """
-    TO-DO: document what your XBlock does.
-    """
 
-    # Fields are defined on the class.  You can access them in your code as
-    # self.<fieldname>.
-
-    # TO-DO: delete count, and define your own fields.
-    count = Integer(
-        default=0, scope=Scope.user_state,
-        help="A simple counter, to show something happening",
+    display_name = String(
+        default="ConditionalNavigator XBlock",
+        display_name="ConditionalNavigator XBlock",
+        help="",
+        scope=Scope.settings
     )
 
-    def resource_string(self, path):
-        """Handy helper for getting resources from our kit."""
-        data = pkg_resources.resource_string(__name__, path)
-        return data.decode("utf8")
+    csv_url = String(
+        default="",
+        help="URL to CSV containing slide ids and default states",
+        scope=Scope.settings
+    )
 
-    # TO-DO: change this view to display your data your own way.
+    slide_state = Dict(
+        default={},
+        help="Dictionary containing state of each slide for this student",
+        scope=Scope.user_state
+    )
+
     def student_view(self, context=None):
         """
         The primary view of the ConditionalNavigatorXBlock, shown to students
@@ -39,21 +44,6 @@ class ConditionalNavigatorXBlock(XBlock):
         frag.initialize_js('ConditionalNavigatorXBlock')
         return frag
 
-    # TO-DO: change this handler to perform your own actions.  You may need more
-    # than one handler, or you may not need any handlers at all.
-    @XBlock.json_handler
-    def increment_count(self, data, suffix=''):
-        """
-        An example handler, which increments the data.
-        """
-        # Just to show data coming in...
-        assert data['hello'] == 'world'
-
-        self.count += 1
-        return {"count": self.count}
-
-    # TO-DO: change this to create the scenarios you'd like to see in the
-    # workbench while developing your XBlock.
     @staticmethod
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
