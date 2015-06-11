@@ -7,3 +7,7 @@
 .conditionalnav_block p {
     cursor: pointer;
 }
+
+.xmodule_display.xmodule_SequenceModule .sequence-nav .sequence-list-wrapper {
+    margin: 0 0;
+}

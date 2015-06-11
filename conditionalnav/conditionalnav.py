@@ -32,10 +32,10 @@ class ConditionalNavigatorXBlock(XBlock):
         The primary view of the ConditionalNavigatorXBlock, shown to students
         when viewing courses.
         """
-        html = self.resource_string("static/html/conditionalnav.html")
+        html = self.resource_string("templates/conditionalnav.html")
         frag = Fragment(html.format(self=self))
         frag.add_css(self.resource_string("static/css/conditionalnav.css"))
-        frag.add_javascript(self.resource_string("static/js/src/conditionalnav.js"))
+        frag.add_javascript(self.resource_string("static/js/conditionalnav.js"))
         frag.initialize_js('ConditionalNavigatorXBlock')
         return frag
 
