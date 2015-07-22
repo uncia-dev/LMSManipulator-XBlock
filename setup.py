@@ -35,5 +35,5 @@ setup(
             'conditionalnav = conditionalnav:ConditionalNavigatorXBlock',
         ]
     },
-    package_data=package_data("conditionalnav", ["static", "public"]),
+    package_data=package_data("conditionalnav", ["static", "templates", "public"]),
 )

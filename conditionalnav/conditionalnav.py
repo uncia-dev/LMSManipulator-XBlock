@@ -1,15 +1,14 @@
-"""TO-DO: Write a description of what this XBlock is."""
+"""
+???
+"""
 
-import pkg_resources
-import urllib, datetime, json
-import csv
+import urllib, datetime, json, csv
 
-from xblock.core import XBlock
-from xblock.fields import Scope, Integer, List, String, Dict
-from xblock.fragment import Fragment
-
-from django.template import Context, Template
 from .utils import render_template, load_resource, resource_string
+from django.template import Context, Template
+from xblock.core import XBlock
+from xblock.fields import Scope, Integer, List, String, Boolean, Dict
+from xblock.fragment import Fragment
 
 class ConditionalNavigatorXBlock(XBlock):
 
@@ -23,7 +22,7 @@ class ConditionalNavigatorXBlock(XBlock):
     csv_url = String(
         default="",
         help="URL to CSV containing slide ids and default states",
-        scope=Scope.settings
+        scope=Scope.content
     )
 
     slide_state = Dict(
@@ -32,27 +31,28 @@ class ConditionalNavigatorXBlock(XBlock):
         scope=Scope.user_state
     )
 
-    sessions = Dict(
+    sessions = List(
         default={},
-        help="Dictionary containing start time & date and time spent during a session pairs",
+        help="List containing data on each session (ie, start time, end time)",
         scope=Scope.user_state
     )
 
-    visits = Integer(
-        default=0,
-        help="Number of times the student visited this XBlock."
-    )
+
+    # method for visits
 
     def student_view(self, context=None):
         """
         The primary view of the ConditionalNavigatorXBlock, shown to students
         when viewing courses.
         """
-        html = self.resource_string("templates/conditionalnav.html")
-        frag = Fragment(html.format(self=self))
-        frag.add_css(self.resource_string("static/css/conditionalnav.css"))
-        frag.add_javascript(self.resource_string("static/js/conditionalnav.js"))
+        frag = Fragment()
+        content = {'self': self}
+
+        frag.add_content(render_template('templates/conditionalnav.html', content))
+        frag.add_css(load_resource("static/css/conditionalnav.css"))
+        frag.add_javascript(load_resource("static/js/conditionalnav.js"))
         frag.initialize_js('ConditionalNavigatorXBlock')
+
         return frag
 
     @staticmethod
