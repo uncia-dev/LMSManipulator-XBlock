@@ -32,6 +32,17 @@ class ConditionalNavigatorXBlock(XBlock):
         scope=Scope.user_state
     )
 
+    sessions = Dict(
+        default={},
+        help="Dictionary containing start time & date and time spent during a session pairs",
+        scope=Scope.user_state
+    )
+
+    visits = Integer(
+        default=0,
+        help="Number of times the student visited this XBlock."
+    )
+
     def student_view(self, context=None):
         """
         The primary view of the ConditionalNavigatorXBlock, shown to students
