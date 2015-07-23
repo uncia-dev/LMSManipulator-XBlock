@@ -1,16 +1,11 @@
-"""Setup for conditionalnav XBlock."""
+"""Setup for AnalyticsExtras XBlock."""
 
 import os
 from setuptools import setup
 
 
 def package_data(pkg, roots):
-    """Generic function to find package_data.
 
-    All of the files under each of the `roots` will be declared as package
-    data for package `pkg`.
-
-    """
     data = []
     for root in roots:
         for dirname, _, files in os.walk(os.path.join(pkg, root)):
@@ -21,19 +16,19 @@ def package_data(pkg, roots):
 
 
 setup(
-    name='conditionalnav-xblock',
+    name='analyticsextras-xblock',
     version='0.1',
-    description='conditionalnav XBlock',   # TODO: write a better description.
+    description='AnalyticsExtras XBlock',   # TODO: write a better description.
     packages=[
-        'conditionalnav',
+        'analyticsextras',
     ],
     install_requires=[
         'XBlock',
     ],
     entry_points={
         'xblock.v1': [
-            'conditionalnav = conditionalnav:ConditionalNavigatorXBlock',
+            'analyticsextras = analyticsextras:AnalyticsExtrasXBlock',
         ]
     },
-    package_data=package_data("conditionalnav", ["static", "templates", "public"]),
+    package_data=package_data("analyticsextras", ["static", "templates", "public"]),
 )

@@ -1,0 +1,16 @@
+analyticsextras/__init__.py
+analyticsextras/analyticsextras.py
+analyticsextras/utils.py
+analyticsextras/static/README.txt
+analyticsextras/static/css/analyticsextras.css
+analyticsextras/static/css/analyticsextras_edit.css
+analyticsextras/static/js/analyticsextras.js
+analyticsextras/static/js/analyticsextras_edit.js
+analyticsextras/templates/analyticsextras.html
+analyticsextras/templates/analyticsextras_edit.html
+analyticsextras_xblock.egg-info/PKG-INFO
+analyticsextras_xblock.egg-info/SOURCES.txt
+analyticsextras_xblock.egg-info/dependency_links.txt
+analyticsextras_xblock.egg-info/entry_points.txt
+analyticsextras_xblock.egg-info/requires.txt
+analyticsextras_xblock.egg-info/top_level.txt
