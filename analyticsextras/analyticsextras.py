@@ -54,19 +54,22 @@ class AnalyticsExtrasXBlock(XBlock):
         scope=Scope.user_state
     )
 
-    tick_period = Integer(
-        default=3000,
+    tick_interval = Integer(
+        default=20000,
         help="The time (in ms) between pings sent to the server (tied to sessions above)",
         scope=Scope.content
     )
 
+    session_ended = Boolean(
+        default=False,
+        help="Has the student ended this session yet?",
+        scope=Scope.user_state
+    )
 
     """
 
     Functions to build
 
-        number of visits
-        send ticks to backend to record time spent per session
         populate sessions
         populate sequence_list
         populate sequence_list_staff
@@ -75,10 +78,17 @@ class AnalyticsExtrasXBlock(XBlock):
     """
 
     @XBlock.json_handler
-    def initialize(self, data, suffix=''):
+    def aex_init(self, data, suffix=''):
+
+        self.session_ended = False;
+
+        csv_object = ""
+        if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
+            csv_object = load_resource(self.csv_url)
 
         settings = {
-            "tick_period": self.tick_period,
+            "tick_interval": self.tick_interval,
+            "csv_object": csv_object
         }
 
         return settings
@@ -105,9 +115,13 @@ class AnalyticsExtrasXBlock(XBlock):
         Record a periodic tick while the student views this XBlock.
         A safety measure in case their browser or tab crashes.
         """
+
         if len(self.sessions) > 0:
-            print ("===== Session tick at: " + str(datetime.datetime.now()))
-            self.sessions[-1][1] = str(datetime.datetime.now())
+
+            if not self.session_ended:
+
+                print ("===== Session tick at: " + str(datetime.datetime.now()))
+                self.sessions[-1][1] = str(datetime.datetime.now())
 
         return {}
 
@@ -118,10 +132,16 @@ class AnalyticsExtrasXBlock(XBlock):
         """
 
         if len(self.sessions) > 0:
-            print ("===== Session ended at: " + str(datetime.datetime.now()))
-            self.sessions[-1][2] = str(datetime.datetime.now())
+
+            if not self.session_ended:
+
+                print ("===== Session ended at: " + str(datetime.datetime.now()))
+                self.sessions[-1][2] = str(datetime.datetime.now())
+                self.session_ended = True
 
         return {}
+
+    #def redirect()
 
     def student_view(self, context=None):
         """
@@ -130,7 +150,6 @@ class AnalyticsExtrasXBlock(XBlock):
 
         fragment = Fragment()
         content = {'self': self}
-
         self.session_start(self)
 
         fragment.add_content(render_template('templates/analyticsextras.html', content))
@@ -149,12 +168,31 @@ class AnalyticsExtrasXBlock(XBlock):
         fragment = Fragment()
         content = {'self': self}
 
-        fragment.add_content(render_template('templates/analytics_edit.html', content))
+        fragment.add_content(render_template('templates/analyticsextras_edit.html', content))
         fragment.add_css(load_resource('static/css/analyticsextras_edit.css'))
         fragment.add_javascript(load_resource('static/js/analyticsextras_edit.js'))
         fragment.initialize_js('AnalyticsExtrasXBlockStudio')
 
         return fragment
+
+    @XBlock.json_handler
+    def studio_submit(self, data, suffix=''):
+        """
+        Course author pressed the Save button in Studio
+        """
+
+        result = {}
+
+        if len(data) > 0:
+
+            self.display_name = data["display_name"]
+            self.hide_nav_buttons = data["hide_nav_buttons"] == 1
+            self.hide_sequence_bottom = data["hide_sequence_bottom"] ==1
+            self.csv_url = data["csv_url"]
+            self.sequence_list_staff = data["sequence_list_staff"]
+            self.tick_interval = data["tick_interval"]
+
+        return result
 
     @staticmethod
     def workbench_scenarios():

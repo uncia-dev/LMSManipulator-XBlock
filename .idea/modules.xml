@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/conditionalnav.iml" filepath="$PROJECT_DIR$/.idea/conditionalnav.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AnalyticsExtras-XBlock.iml" filepath="$PROJECT_DIR$/.idea/AnalyticsExtras-XBlock.iml" />
     </modules>
   </component>
 </project>

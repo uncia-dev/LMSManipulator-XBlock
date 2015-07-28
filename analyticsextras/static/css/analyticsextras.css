@@ -1,13 +1,3 @@
-/* CSS for ConditionalNavigatorXBlock */
-
-.conditionalnav_block .count {
-    font-weight: bold;
-}
-
-.conditionalnav_block p {
-    cursor: pointer;
-}
-
-.xmodule_display.xmodule_SequenceModule .sequence-nav .sequence-list-wrapper {
-    margin: 0 0;
+.aex_controls {
+    text-align: center;
 }

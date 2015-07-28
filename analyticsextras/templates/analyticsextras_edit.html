@@ -1,5 +1,17 @@
 <div class="analyticsextras_xblock_studio">
 
-    <p>There shouldn't be anything visible in this XBlock.</p>
+    <p class="aex_desc">Display Name</p>
+    <input type="text" class="aex_display_name" value="{{ self.display_name }}">
+    <br/>
+    <p class="aex__desc">Hide top navigation buttons?</p>
+    <input type="checkbox" class="aex_hide_nav_buttons" {% if self.hide_nav_buttons %} checked {% endif %}>
+    <p class="aex__desc">Hide bottom navigation buttons?</p>
+    <input type="checkbox" class="aex_hide_sequence_bottom" {% if self.hide_sequence_bottom %} checked {% endif %}>
+    <p class="aex_desc">Student Ping Interval (ms)</p>
+    <input type="text" class="aex_tick_interval" value="{{ self.tick_interval }}">
+    <p class="aex_desc">Chapters CSV URL</p>
+    <input type="text" class="aex_csv_url" value="{{ self.csv_url }}">
+    <p class="aex_desc">Chapter IDs (Override for URL)</p>
+    <textarea wrap="off" class="aex_sequence_list_staff" cols="80" rows="20">{{ self.sequence_list_staff }}</textarea>
 
 </div>
