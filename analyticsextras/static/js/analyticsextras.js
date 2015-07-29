@@ -9,21 +9,28 @@ function AnalyticsExtrasXBlock(runtime, xblock_element) {
         url: runtime.handlerUrl(xblock_element, 'aex_init'),
         data: JSON.stringify({}),
         success: function(result) {
-            console.log("make me work!");
+
+            console.log(result.tick_interval);
+            //console.log(result.csv_object);
+
         },
         async: false
     });
 
+    $('.button-previous').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase() === "false");
+    $('.button-next').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase() === "false");
+    $(".sequence-list-wrapper").toggle("{{ self.hide_nav }}".toLocaleLowerCase() === "false");
+    $('.sequence-bottom').toggle("{{ self.hide_sequence_bottom }}".toLocaleLowerCase() === "false");
+    $('.course-index').toggle("{{ self.hide_sidebar }}".toLocaleLowerCase() === "false");
+    if ("{{ self.toggle_sidebar }}".toLocaleLowerCase() === "true") $('.course-index').hide();
 
-    $('.button-previous').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase());
-    $('.button-next').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase());
-    $('.sequence-bottom').toggle("{{ self.hide_sequence_bottom }}".toLocaleLowerCase());
-
+/*
     // Populate tabs bar, hide some of the tabs
     $("#sequence-list li").each(function() {
         $(this).hide();
         // add end() event for each click ??
     });
+*/
 
     // Send the server a ping
     function session_ticks(freq) {
@@ -57,6 +64,7 @@ function AnalyticsExtrasXBlock(runtime, xblock_element) {
         // Tell the server that this session is over
         $('.aex_prev').click(function() { session_end(); });
         $('.aex_next').click(function() { session_end(); });
+        $('.aex_sidebar').click(function() { $('.course-index').toggle() });
 
     });
 

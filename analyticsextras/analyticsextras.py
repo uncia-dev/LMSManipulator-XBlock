@@ -18,21 +18,39 @@ class AnalyticsExtrasXBlock(XBlock):
         scope=Scope.settings
     )
 
-    csv_url = String(
-        default="",
-        help="URL to CSV containing slide ids and default states",
-        scope=Scope.content
-    )
-
     hide_nav_buttons = Boolean(
         default=False,
         help="Hide top navigation buttons in LMS",
         scope=Scope.content
     )
 
+    hide_nav = Boolean(
+        default=False,
+        help="Hide the entire navigation bar in LMS.",
+        scope=Scope.content
+    )
+
     hide_sequence_bottom = Boolean(
         default=False,
         help="Hide bottom navigation buttons in LMS",
+        scope=Scope.content
+    )
+
+    hide_sidebar = Boolean(
+        default=False,
+        help="Hide side bar in LMS",
+        scope=Scope.content
+    )
+
+    toggle_sidebar = Boolean(
+        default=False,
+        help="Toggle side bar in LMS",
+        scope=Scope.content
+    )
+
+    csv_url = String(
+        default="http://127.0.0.1:8080/FL_insurance_sample.csv",
+        help="URL to CSV containing slide ids and default states",
         scope=Scope.content
     )
 
@@ -78,17 +96,44 @@ class AnalyticsExtrasXBlock(XBlock):
     """
 
     @XBlock.json_handler
+    def refresh_sequence(self, data, suffix=''):
+
+        content = {"csv_object": ""}
+
+        csv_object = []
+        if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
+
+            '''
+            states
+            v - visible, but must complete
+            h - hidden
+            s - visible, but skippable
+            '''
+
+            print ("-----" + self.csv_url)
+
+            try:
+
+                f = urllib.urlopen(self.csv_url)
+                cr = csv.reader(f)
+
+                for r in cr:
+                    print (r)
+
+                f.close()
+
+            except:
+                print ("CSV reading error.")
+
+        return content
+
+    @XBlock.json_handler
     def aex_init(self, data, suffix=''):
 
-        self.session_ended = False;
-
-        csv_object = ""
-        if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
-            csv_object = load_resource(self.csv_url)
+        self.session_ended = False
 
         settings = {
             "tick_interval": self.tick_interval,
-            "csv_object": csv_object
         }
 
         return settings
@@ -168,6 +213,9 @@ class AnalyticsExtrasXBlock(XBlock):
         fragment = Fragment()
         content = {'self': self}
 
+        if self.tick_interval < 1000:
+            self.tick_interval = 86400000  # 24 hrs
+
         fragment.add_content(render_template('templates/analyticsextras_edit.html', content))
         fragment.add_css(load_resource('static/css/analyticsextras_edit.css'))
         fragment.add_javascript(load_resource('static/js/analyticsextras_edit.js'))
@@ -187,10 +235,20 @@ class AnalyticsExtrasXBlock(XBlock):
 
             self.display_name = data["display_name"]
             self.hide_nav_buttons = data["hide_nav_buttons"] == 1
-            self.hide_sequence_bottom = data["hide_sequence_bottom"] ==1
+            self.hide_nav = data["hide_nav"] == 1
+            self.hide_sequence_bottom = data["hide_sequence_bottom"] == 1
+            self.hide_sidebar = data["hide_sidebar"] == 1
+            self.toggle_sidebar = data["toggle_sidebar"] == 1
+
+            if self.hide_sidebar:
+                self.toggle_sidebar = False
+
             self.csv_url = data["csv_url"]
             self.sequence_list_staff = data["sequence_list_staff"]
-            self.tick_interval = data["tick_interval"]
+            self.tick_interval = int(data["tick_interval"])
+
+            if self.tick_interval < 1000:
+                self.tick_interval = 86400000  # 24 hrs
 
         return result
 

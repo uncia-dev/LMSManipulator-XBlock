@@ -1,6 +1,7 @@
 <div class="analyticsextras_block">
 
     <div class="aex_controls">
+        <a class="aex_sidebar" {% if not self.toggle_sidebar or self.hide_bar %} hidden {% endif %}>Sidebar</a>
         <a class="aex_prev">Previous</a>
         <a class="aex_next">Next</a>
     </div>
@@ -9,18 +10,34 @@
 
         <h4>Display name</h4>
         <p>{{self.display_name}}</p>
+
         <h4>CSV URL</h4>
         <p>{{self.csv_url}}</p>
+
         <h4>Hide Top Navigation Buttons?</h4>
         <p>{{self.hide_nav_buttons}}</p>
+
+        <h4>Hide Top Navigation Bar?</h4>
+        <p>{{self.hide_nav}}</p>
+
         <h4>Hide Bottom Navigation Buttons?</h4>
         <p>{{self.hide_sequence_bottom}}</p>
+
+        <h4>Hide Sidebar?</h4>
+        <p>{{self.hide_sidebar}}</p>
+
+        <h4>Students can toggle Sidebar?</h4>
+        <p>{{self.toggle_sidebar}}</p>
+
         <h4>Student Ping Interval</h4>
-        <p>{{self.ping_interval}}</p>
+        <p>{{self.tick_interval}}</p>
+
         <h4>Sequence List (Default - Set by Staff)</h4>
         <p>{{self.sequence_list_staff}}</p>
+
         <h4>Sequence List (Student)</h4>
         <p>{{self.sequence_list}}</p>
+
         <h4>Student Sessions</h4>
         <p>{{self.sessions}}</p>
 
