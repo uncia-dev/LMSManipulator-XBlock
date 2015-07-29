@@ -2,17 +2,13 @@ function AnalyticsExtrasXBlock(runtime, xblock_element) {
 
     var sequence_list = [];
 
-
     // Initialize this XBlock via an AJAX request
     $.ajax({
         type: "POST",
         url: runtime.handlerUrl(xblock_element, 'aex_init'),
         data: JSON.stringify({}),
         success: function(result) {
-
-            console.log(result.tick_interval);
-            //console.log(result.csv_object);
-
+            console.log("make me work!");
         },
         async: false
     });
@@ -22,7 +18,6 @@ function AnalyticsExtrasXBlock(runtime, xblock_element) {
     $(".sequence-list-wrapper").toggle("{{ self.hide_nav }}".toLocaleLowerCase() === "false");
     $('.sequence-bottom').toggle("{{ self.hide_sequence_bottom }}".toLocaleLowerCase() === "false");
     $('.course-index').toggle("{{ self.hide_sidebar }}".toLocaleLowerCase() === "false");
-    if ("{{ self.toggle_sidebar }}".toLocaleLowerCase() === "true") $('.course-index').hide();
 
 /*
     // Populate tabs bar, hide some of the tabs

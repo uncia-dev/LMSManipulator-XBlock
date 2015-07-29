@@ -73,7 +73,7 @@ class AnalyticsExtrasXBlock(XBlock):
     )
 
     tick_interval = Integer(
-        default=20000,
+        default=60000,
         help="The time (in ms) between pings sent to the server (tied to sessions above)",
         scope=Scope.content
     )
@@ -124,6 +124,8 @@ class AnalyticsExtrasXBlock(XBlock):
 
             except:
                 print ("CSV reading error.")
+
+            content["csv_object"] = csv_object
 
         return content
 
@@ -199,7 +201,6 @@ class AnalyticsExtrasXBlock(XBlock):
 
         fragment.add_content(render_template('templates/analyticsextras.html', content))
         fragment.add_css(load_resource("static/css/analyticsextras.css"))
-        #fragment.add_javascript(load_resource('static/js/analyticsextras.js'))
         fragment.add_javascript(render_template('static/js/analyticsextras.js', content))
         fragment.initialize_js('AnalyticsExtrasXBlock')
 
