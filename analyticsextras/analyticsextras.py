@@ -12,7 +12,7 @@ from xblock.fragment import Fragment
 class AnalyticsExtrasXBlock(XBlock):
 
     display_name = String(
-        default="AnalyticsExtras XBlock",
+        default="",
         display_name="AnalyticsExtras XBlock",
         help="",
         scope=Scope.settings

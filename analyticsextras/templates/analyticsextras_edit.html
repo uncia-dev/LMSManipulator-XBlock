@@ -1,8 +1,7 @@
 <div class="analyticsextras_xblock_studio">
 
-    <p class="aex_desc">Display Name</p>
-    <input type="text" class="aex_display_name" value="{{ self.display_name }}">
-    <br/>
+    <p class="aex_desc" hidden>Display Name</p>
+    <input type="text" class="aex_display_name" value="{{ self.display_name }}" hidden>
     <p class="aex_desc">Hide top navigation buttons?</p>
     <input type="checkbox" class="aex_hide_nav_buttons" {% if self.hide_nav_buttons %} checked {% endif %}>
     <p class="aex_desc">Hide top navigation bar?</p>

@@ -25,8 +25,8 @@
       <file leaf-file-name="analyticsextras.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/analyticsextras/analyticsextras.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41990522">
-              <caret line="234" column="0" selection-start-line="234" selection-start-column="0" selection-end-line="234" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.23886256">
+              <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
               <folding>
                 <element signature="e#13#47#0" expanded="true" />
               </folding>
@@ -57,8 +57,8 @@
       <file leaf-file-name="analyticsextras_edit.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/analyticsextras/templates/analyticsextras_edit.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.666667">
-              <caret line="22" column="6" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
+            <state vertical-scroll-proportion="-11.333333">
+              <caret line="17" column="61" selection-start-line="17" selection-start-column="61" selection-end-line="17" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -120,11 +120,11 @@
         <option value="$PROJECT_DIR$/analyticsextras/static/js/analyticsextras_chunk_2.js" />
         <option value="$PROJECT_DIR$/analyticsextras/static/css/analyticsextras.css" />
         <option value="$PROJECT_DIR$/analyticsextras/static/css/analyticsextras_edit.css" />
-        <option value="$PROJECT_DIR$/analyticsextras/templates/analyticsextras_edit.html" />
         <option value="$PROJECT_DIR$/analyticsextras/templates/analyticsextras.html" />
         <option value="$PROJECT_DIR$/analyticsextras/static/js/analyticsextras_edit.js" />
         <option value="$PROJECT_DIR$/analyticsextras/static/js/analyticsextras.js" />
         <option value="$PROJECT_DIR$/analyticsextras/analyticsextras.py" />
+        <option value="$PROJECT_DIR$/analyticsextras/templates/analyticsextras_edit.html" />
       </list>
     </option>
   </component>
@@ -508,7 +508,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="0" width="1928" height="1178" extended-state="7" />
+    <frame x="-4" y="0" width="1928" height="1178" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25572917" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -803,14 +803,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/analyticsextras/templates/analyticsextras_edit.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.666667">
-          <caret line="22" column="6" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/analyticsextras/static/js/analyticsextras_edit.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -827,10 +819,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/analyticsextras/templates/analyticsextras_edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.333333">
+          <caret line="17" column="61" selection-start-line="17" selection-start-column="61" selection-end-line="17" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/analyticsextras/analyticsextras.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41990522">
-          <caret line="234" column="0" selection-start-line="234" selection-start-column="0" selection-end-line="234" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.23886256">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
           <folding>
             <element signature="e#13#47#0" expanded="true" />
           </folding>
