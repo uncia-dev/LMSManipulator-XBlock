@@ -35,9 +35,9 @@ function AnalyticsExtrasXBlockStudio(runtime, xblock_element) {
                     "hide_sequence_bottom": $('.aex_hide_sequence_bottom').prop('checked') ? 1 : 0,
                     "hide_sidebar": $('.aex_hide_sidebar').prop('checked') ? 1 : 0,
                     "toggle_sidebar": $('.aex_toggle_sidebar').prop('checked') ? 1 : 0,
-                    "tick_interval": $('.aex_tick_interval').val(),
                     "csv_url": $('.aex_csv_url').val(),
-                    "sequence_list_staff": $('.aex_sequence_list_staff').val()
+                    "sequence_list_staff": $('.aex_sequence_list_staff').val(),
+                    "dev_stuff": $('.chx_dev_stuff_studio').prop('checked') ? 1 : 0
                 })
             });
 

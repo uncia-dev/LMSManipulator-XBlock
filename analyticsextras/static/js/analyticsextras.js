@@ -27,43 +27,30 @@ function AnalyticsExtrasXBlock(runtime, xblock_element) {
     });
 */
 
-    // Send the server a ping
-    function session_ticks(freq) {
-
-        setInterval(function() {
-            $.ajax({
-                type: "POST",
-                url: runtime.handlerUrl(xblock_element, 'session_tick'),
-                data: JSON.stringify({}),
-                async: false
-            });
-        }, freq);
-
+    // Send the server the end of session message if using ComplexHTML
+    function chx_session_end() {
+        $('.chx_end_session').click();
     }
-
-    // Send the server the end of session message
-    function session_end() {
-        $.ajax({
-            type: "POST",
-            url: runtime.handlerUrl(xblock_element, 'session_end'),
-            data: JSON.stringify({}),
-            async: false
-        });
-    }
-
-    $(function ($) {
-        
-        // Periodically tell the server that the student is still viewing this slide
-        session_ticks("{{ self.tick_interval }}");
-
-        // Tell the server that this session is over
-        $('.aex_prev').click(function() { session_end(); });
-        $('.aex_next').click(function() { session_end(); });
-        $('.aex_sidebar').click(function() { $('.course-index').toggle() });
-
-    });
 
     // Tell the server that this session is over
-    $( window ).unload(function() { session_end(); });
+    $('.aex_prev').click(function() {
+        chx_session_end(); // only works if using ComplexHTML
+    });
+
+    $('.aex_next').click(function() {
+        chx_session_end(); // only works if using ComplexHTML
+    });
+
+    $('.aex_sidebar').click(function() {
+        $('.course-index').toggle()
+    });
+
+    $( window ).unload(function() {
+        chx_session_end(); // only works if using ComplexHTML
+    });
+
+    $(function ($) {
+
+    });
 
 }

@@ -60,28 +60,9 @@ class AnalyticsExtrasXBlock(XBlock):
         scope=Scope.content
     )
 
-    sequence_list = Dict(
-        default={},
-        help="Dictionary of units within subsection and their states for the user",
-        scope=Scope.user_state
-    )
-
-    sessions = List(
-        default=[],
-        help="List containing data on each session (ie, start time, end time)",
-        scope=Scope.user_state
-    )
-
-    tick_interval = Integer(
-        default=60000,
-        help="The time (in ms) between pings sent to the server (tied to sessions above)",
-        scope=Scope.content
-    )
-
-    session_ended = Boolean(
-        default=False,
-        help="Has the student ended this session yet?",
-        scope=Scope.user_state
+    dev_stuff = Boolean(
+        help="Show chx_dev_stuff div in LMS?",
+        default=False, scope=Scope.content
     )
 
     """
@@ -132,61 +113,19 @@ class AnalyticsExtrasXBlock(XBlock):
     @XBlock.json_handler
     def aex_init(self, data, suffix=''):
 
-        self.session_ended = False
+        #self.session_ended = False
 
-        settings = {
-            "tick_interval": self.tick_interval,
-        }
+        #settings = {
+            #"tick_interval": self.tick_interval,
+        #}
+
+        settings = {}
 
         return settings
 
-    @staticmethod
-    def clear_data(self):
-        del self.sessions[:]
-
-    @staticmethod
-    def get_student_visits(self):
-        return len(self.sessions)
-
-    @staticmethod
-    def session_start(self):
-        """
-        Start a new student session and record the time when it happens
-        """
-        print ("===== Session started at: " + str(datetime.datetime.now()))
-        self.sessions.append([str(datetime.datetime.now()), "", ""])
-
-    @XBlock.json_handler
-    def session_tick(self, data, suffix=''):
-        """
-        Record a periodic tick while the student views this XBlock.
-        A safety measure in case their browser or tab crashes.
-        """
-
-        if len(self.sessions) > 0:
-
-            if not self.session_ended:
-
-                print ("===== Session tick at: " + str(datetime.datetime.now()))
-                self.sessions[-1][1] = str(datetime.datetime.now())
-
-        return {}
-
-    @XBlock.json_handler
-    def session_end(self, data, suffix=''):
-        """
-        End a student session and record the time when it happens
-        """
-
-        if len(self.sessions) > 0:
-
-            if not self.session_ended:
-
-                print ("===== Session ended at: " + str(datetime.datetime.now()))
-                self.sessions[-1][2] = str(datetime.datetime.now())
-                self.session_ended = True
-
-        return {}
+#    @staticmethod
+#    def clear_data(self):
+#        del self.sessions[:]
 
     #def redirect()
 
@@ -197,7 +136,6 @@ class AnalyticsExtrasXBlock(XBlock):
 
         fragment = Fragment()
         content = {'self': self}
-        self.session_start(self)
 
         fragment.add_content(render_template('templates/analyticsextras.html', content))
         fragment.add_css(load_resource("static/css/analyticsextras.css"))
@@ -213,9 +151,6 @@ class AnalyticsExtrasXBlock(XBlock):
 
         fragment = Fragment()
         content = {'self': self}
-
-        if self.tick_interval < 1000:
-            self.tick_interval = 86400000  # 24 hrs
 
         fragment.add_content(render_template('templates/analyticsextras_edit.html', content))
         fragment.add_css(load_resource('static/css/analyticsextras_edit.css'))
@@ -240,16 +175,13 @@ class AnalyticsExtrasXBlock(XBlock):
             self.hide_sequence_bottom = data["hide_sequence_bottom"] == 1
             self.hide_sidebar = data["hide_sidebar"] == 1
             self.toggle_sidebar = data["toggle_sidebar"] == 1
+            self.dev_stuff = data["dev_stuff"] == 1
 
             if self.hide_sidebar:
                 self.toggle_sidebar = False
 
             self.csv_url = data["csv_url"]
             self.sequence_list_staff = data["sequence_list_staff"]
-            self.tick_interval = int(data["tick_interval"])
-
-            if self.tick_interval < 1000:
-                self.tick_interval = 86400000  # 24 hrs
 
         return result
 
