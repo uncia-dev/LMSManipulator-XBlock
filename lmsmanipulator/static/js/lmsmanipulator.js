@@ -1,11 +1,11 @@
-function AnalyticsExtrasXBlock(runtime, xblock_element) {
+function LMSManipulatorXBlock(runtime, xblock_element) {
 
     var sequence_list = [];
 
     // Initialize this XBlock via an AJAX request
     $.ajax({
         type: "POST",
-        url: runtime.handlerUrl(xblock_element, 'aex_init'),
+        url: runtime.handlerUrl(xblock_element, 'lmx_init'),
         data: JSON.stringify({}),
         success: function(result) {
             console.log("make me work!");
@@ -33,15 +33,15 @@ function AnalyticsExtrasXBlock(runtime, xblock_element) {
     }
 
     // Tell the server that this session is over
-    $('.aex_prev').click(function() {
+    $('.lmx_prev').click(function() {
         chx_session_end(); // only works if using ComplexHTML
     });
 
-    $('.aex_next').click(function() {
+    $('.lmx_next').click(function() {
         chx_session_end(); // only works if using ComplexHTML
     });
 
-    $('.aex_sidebar').click(function() {
+    $('.lmx_sidebar').click(function() {
         $('.course-index').toggle()
     });
 

@@ -9,11 +9,11 @@ from xblock.core import XBlock
 from xblock.fields import Scope, Integer, List, String, Boolean, Dict
 from xblock.fragment import Fragment
 
-class AnalyticsExtrasXBlock(XBlock):
+class LMSManipulatorXBlock(XBlock):
 
     display_name = String(
         default="",
-        display_name="AnalyticsExtras XBlock",
+        display_name="LMSManipulator XBlock",
         help="",
         scope=Scope.settings
     )
@@ -111,7 +111,7 @@ class AnalyticsExtrasXBlock(XBlock):
         return content
 
     @XBlock.json_handler
-    def aex_init(self, data, suffix=''):
+    def lmx_init(self, data, suffix=''):
 
         #self.session_ended = False
 
@@ -137,10 +137,10 @@ class AnalyticsExtrasXBlock(XBlock):
         fragment = Fragment()
         content = {'self': self}
 
-        fragment.add_content(render_template('templates/analyticsextras.html', content))
-        fragment.add_css(load_resource("static/css/analyticsextras.css"))
-        fragment.add_javascript(render_template('static/js/analyticsextras.js', content))
-        fragment.initialize_js('AnalyticsExtrasXBlock')
+        fragment.add_content(render_template('templates/lmsmanipulator.html', content))
+        fragment.add_css(load_resource("static/css/lmsmanipulator.css"))
+        fragment.add_javascript(render_template('static/js/lmsmanipulator.js', content))
+        fragment.initialize_js('LMSManipulatorXBlock')
 
         return fragment
 
@@ -152,10 +152,10 @@ class AnalyticsExtrasXBlock(XBlock):
         fragment = Fragment()
         content = {'self': self}
 
-        fragment.add_content(render_template('templates/analyticsextras_edit.html', content))
-        fragment.add_css(load_resource('static/css/analyticsextras_edit.css'))
-        fragment.add_javascript(load_resource('static/js/analyticsextras_edit.js'))
-        fragment.initialize_js('AnalyticsExtrasXBlockStudio')
+        fragment.add_content(render_template('templates/lmsmanipulator_edit.html', content))
+        fragment.add_css(load_resource('static/css/lmsmanipulator_edit.css'))
+        fragment.add_javascript(load_resource('static/js/lmsmanipulator_edit.js'))
+        fragment.initialize_js('LMSManipulatorXBlockStudio')
 
         return fragment
 
@@ -188,9 +188,9 @@ class AnalyticsExtrasXBlock(XBlock):
     @staticmethod
     def workbench_scenarios():
         return [
-            ("AnalyticsExtrasXBlock",
+            ("LMSManipulatorXBlock",
              """<vertical_demo>
-                <analyticsextras/>
+                <lmsmanipulator/>
                 </vertical_demo>
              """),
         ]
