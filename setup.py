@@ -1,4 +1,4 @@
-"""Setup for AnalyticsExtras XBlock."""
+"""Setup for LMS Manipulator XBlock."""
 
 import os
 from setuptools import setup
@@ -16,19 +16,19 @@ def package_data(pkg, roots):
 
 
 setup(
-    name='analyticsextras-xblock',
+    name='lmsmanipulator-xblock',
     version='0.1',
-    description='AnalyticsExtras XBlock',   # TODO: write a better description.
+    description='LMS Manipulator XBlock',   # TODO: write a better description.
     packages=[
-        'analyticsextras',
+        'lmsmanipulator',
     ],
     install_requires=[
         'XBlock',
     ],
     entry_points={
         'xblock.v1': [
-            'analyticsextras = analyticsextras:AnalyticsExtrasXBlock',
+            'lmsmanipulator = lmsmanipulator:LMSManipulatorXBlock',
         ]
     },
-    package_data=package_data("analyticsextras", ["static", "templates", "public"]),
+    package_data=package_data("lmsmanipulator", ["static", "templates", "public"]),
 )
