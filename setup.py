@@ -5,7 +5,12 @@ from setuptools import setup
 
 
 def package_data(pkg, roots):
+    """Generic function to find package_data.
 
+    All of the files under each of the `roots` will be declared as package
+    data for package `pkg`.
+
+    """
     data = []
     for root in roots:
         for dirname, _, files in os.walk(os.path.join(pkg, root)):
@@ -18,7 +23,7 @@ def package_data(pkg, roots):
 setup(
     name='lmsmanipulator-xblock',
     version='0.1',
-    description='LMS Manipulator XBlock',   # TODO: write a better description.
+    description='LMS Manipulator XBlock',
     packages=[
         'lmsmanipulator',
     ],

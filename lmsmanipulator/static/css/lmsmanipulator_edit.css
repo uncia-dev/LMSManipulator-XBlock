@@ -6,6 +6,14 @@
     text-align: center;
 }
 
+.lmx_display_name {
+    width: 800px;
+}
+
+.lmx_course_url {
+    width: 800px;
+}
+
 .lmx_csv_url {
-    width: 400px;
+    width: 800px;
 }

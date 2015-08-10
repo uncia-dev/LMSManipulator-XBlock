@@ -2,7 +2,17 @@
 ???
 """
 
-import urllib, datetime, json, csv
+"""
+import urllib, datetime, json, csv, utils
+
+from xblock.core import XBlock
+from xblock.fields import Scope, Integer, List, String, Boolean, Dict
+from xblock.fragment import Fragment
+
+from django.template import Context, Template
+"""
+
+import urllib, datetime, json, csv, utils
 from .utils import render_template, load_resource, resource_string
 from django.template import Context, Template
 from xblock.core import XBlock
@@ -12,10 +22,16 @@ from xblock.fragment import Fragment
 class LMSManipulatorXBlock(XBlock):
 
     display_name = String(
-        default="",
+        default="LMS Manipulator",
         display_name="LMSManipulator XBlock",
         help="",
         scope=Scope.settings
+    )
+
+    course_url = String(
+        default="",
+        help="Course URL. Mandatory field.",
+        scope=Scope.content
     )
 
     hide_nav_buttons = Boolean(
@@ -49,14 +65,8 @@ class LMSManipulatorXBlock(XBlock):
     )
 
     csv_url = String(
-        default="http://127.0.0.1:8080/FL_insurance_sample.csv",
+        default="",
         help="URL to CSV containing slide ids and default states",
-        scope=Scope.content
-    )
-
-    sequence_list_staff = Dict(
-        default={},
-        help="Dictionary of units within subsection and their states, staff override",
         scope=Scope.content
     )
 
@@ -65,50 +75,15 @@ class LMSManipulatorXBlock(XBlock):
         default=False, scope=Scope.content
     )
 
-    """
+    course_tree = List(
+        help="List containing course tree read from specified CSV file",
+        default=[], scope=Scope.content
+    )
 
-    Functions to build
-
-        populate sessions
-        populate sequence_list
-        populate sequence_list_staff
-
-
-    """
-
-    @XBlock.json_handler
-    def refresh_sequence(self, data, suffix=''):
-
-        content = {"csv_object": ""}
-
-        csv_object = []
-        if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
-
-            '''
-            states
-            v - visible, but must complete
-            h - hidden
-            s - visible, but skippable
-            '''
-
-            print ("-----" + self.csv_url)
-
-            try:
-
-                f = urllib.urlopen(self.csv_url)
-                cr = csv.reader(f)
-
-                for r in cr:
-                    print (r)
-
-                f.close()
-
-            except:
-                print ("CSV reading error.")
-
-            content["csv_object"] = csv_object
-
-        return content
+    course_tree_student = List(
+        help="List containing course tree adapted to the student's performance and progress",
+        default=[], scope=Scope.user_state
+    )
 
     @XBlock.json_handler
     def lmx_init(self, data, suffix=''):
@@ -122,6 +97,13 @@ class LMSManipulatorXBlock(XBlock):
         settings = {}
 
         return settings
+
+    @XBlock.json_handler
+    def refresh_sequence(self, data, suffix=''):
+
+        content = {"csv_object": ""}
+
+        return content
 
 #    @staticmethod
 #    def clear_data(self):
@@ -160,16 +142,17 @@ class LMSManipulatorXBlock(XBlock):
         return fragment
 
     @XBlock.json_handler
-    def studio_submit(self, data, suffix=''):
+    def studio_save(self, data, suffix=''):
         """
         Course author pressed the Save button in Studio
         """
 
-        result = {}
+        result = {'result': 'success'}
 
         if len(data) > 0:
 
             self.display_name = data["display_name"]
+            self.course_url = data["course_url"]
             self.hide_nav_buttons = data["hide_nav_buttons"] == 1
             self.hide_nav = data["hide_nav"] == 1
             self.hide_sequence_bottom = data["hide_sequence_bottom"] == 1
@@ -181,7 +164,34 @@ class LMSManipulatorXBlock(XBlock):
                 self.toggle_sidebar = False
 
             self.csv_url = data["csv_url"]
-            self.sequence_list_staff = data["sequence_list_staff"]
+
+            # Generate course tree
+
+            if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
+
+                '''
+                states
+                vc - visible, but must complete
+                hc - hidden, but must complete
+                vs - visible, but skippable (default if column is blank)
+                hs - hidden, but skippable when visible
+                '''
+
+                print ("-----" + self.csv_url)
+
+                try:
+
+                    f = urllib.urlopen(self.csv_url)
+
+                    cr = csv.reader(f)
+
+                    for r in cr:
+                        print (r)
+
+                    f.close()
+
+                except:
+                    print ("CSV reading error.")
 
         return result
 

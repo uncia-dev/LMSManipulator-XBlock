@@ -1,8 +1,11 @@
 <div class="lmsmanipulator_xblock_studio">
 
-    <p class="lmx_desc" hidden>Display Name</p>
-    <input type="text" class="lmx_display_name" value="{{ self.display_name }}" hidden>
+    <p class="lmx_desc">Display Name</p>
+    <input type="text" class="lmx_display_name" value="{{ self.display_name }}">
     <br/>
+
+    <p class="lmx_desc">Course URL</p>
+    <input type="text" class="lmx_course_url" value="{{ self.course_url }}">
 
     <p class="lmx_desc">Hide top navigation buttons?</p>
     <input type="checkbox" class="lmx_hide_nav_buttons" {% if self.hide_nav_buttons %} checked {% endif %}>
@@ -26,10 +29,6 @@
 
     <p class="lmx_desc">Chapters CSV URL</p>
     <input type="text" class="lmx_csv_url" value="{{ self.csv_url }}">
-    <br/>
-
-    <p class="lmx_desc">Chapter IDs (Override for URL)</p>
-    <textarea wrap="off" class="lmx_sequence_list_staff" cols="64" rows="10">{{ self.sequence_list_staff }}</textarea>
     <br/>
 
     <hr/>
