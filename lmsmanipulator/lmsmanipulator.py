@@ -75,12 +75,12 @@ class LMSManipulatorXBlock(XBlock):
         default=False, scope=Scope.content
     )
 
-    course_tree = List(
+    chapters = List(
         help="List containing course tree read from specified CSV file",
         default={}, scope=Scope.content
     )
 
-    course_tree_student = List(
+    chapters_student = List(
         help="List containing course tree adapted to the student's performance and progress",
         default={}, scope=Scope.user_state
     )
@@ -120,44 +120,50 @@ class LMSManipulatorXBlock(XBlock):
 
         chapters = {}
 
-        try:
+        #try:
 
-            csv_file = urllib.urlopen(csv_url)
-            csv_reader = csv.reader(csv_file)
+        csv_file = urllib.urlopen(csv_url)
+        csv_reader = csv.reader(csv_file)
 
-            current_chapter = -1  # current
-            current_subsection = 0
-            current_unit = 0
+        # stuff breaks here
 
-            # Skip line with column names
-            csv_reader.next()
+        '''
+        current_chapter = -1  # current
+        current_subsection = 0
+        current_unit = 0
 
-            for row in csv_reader:
+        # Skip line with column names
+        csv_reader.next()
 
-                # Add a new chapter to dictionary
-                if row[0] != "":
-                    chapters[str(current_chapter + 1)] = \
-                        {"name": row[0], "subsection": {}}
-                    current_chapter += 1
-                    current_subsection = -1
+        for row in csv_reader:
 
-                # Add a new subsection to current chapter
-                if row[1] != "":
-                    chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
-                        {"name": row[1], "unit": {}}
-                    current_subsection += 1
-                    current_unit = 0
+            # Add a new chapter to dictionary
+            if row[0] != "":
+                chapters[str(current_chapter + 1)] = \
+                    {"name": row[0], "subsection": {}}
+                current_chapter += 1
+                current_subsection = -1
 
-                # Add a new unit to current subsection
-                if row[2] != "":
-                    chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
-                        {"name": row[2], "url": row[3], "state": row[4]}
-                    current_unit += 1
+            # Add a new subsection to current chapter
+            if row[1] != "":
+                chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
+                    {"name": row[1], "unit": {}}
+                current_subsection += 1
+                current_unit = 0
 
-            csv_file.close()
+            # Add a new unit to current subsection
+            if row[2] != "":
+                chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
+                    {"name": row[2], "url": row[3], "state": row[4]}
+                current_unit += 1
 
-        except:
-            print("Something broke in CSV reading.")
+        csv_file.close()
+        '''
+
+        #except:
+        #print("Something broke in CSV reading.")
+
+        print (chapters)
 
         return chapters
 
@@ -180,7 +186,18 @@ class LMSManipulatorXBlock(XBlock):
         """
 
         fragment = Fragment()
+
         content = {'self': self}
+
+        print ("CSV TESTING ==========================")
+        print ("-----" + self.csv_url)
+
+        # compare chapters and chapters_students here
+
+
+        self.chapters_read(self.csv_url)
+        #self.chapters_student = self.chapters_read(self.csv_url)
+        #self.chapters_print(self.chapters_student)
 
         fragment.add_content(render_template('templates/lmsmanipulator.html', content))
         fragment.add_css(load_resource("static/css/lmsmanipulator.css"))
@@ -231,7 +248,7 @@ class LMSManipulatorXBlock(XBlock):
             # Generate course tree
 
             if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
-
+                print("nothing")
                 '''
                 states
                 vc - visible, but must complete
@@ -240,21 +257,8 @@ class LMSManipulatorXBlock(XBlock):
                 hs - hidden, but skippable when visible
                 '''
 
-                print ("-----" + self.csv_url)
 
-                try:
 
-                    f = urllib.urlopen(self.csv_url)
-
-                    cr = csv.reader(f)
-
-                    for r in cr:
-                        print (r)
-
-                    f.close()
-
-                except:
-                    print ("CSV reading error.")
 
         return result
 
