@@ -77,12 +77,12 @@ class LMSManipulatorXBlock(XBlock):
 
     course_tree = List(
         help="List containing course tree read from specified CSV file",
-        default=[], scope=Scope.content
+        default={}, scope=Scope.content
     )
 
     course_tree_student = List(
         help="List containing course tree adapted to the student's performance and progress",
-        default=[], scope=Scope.user_state
+        default={}, scope=Scope.user_state
     )
 
     @XBlock.json_handler
@@ -110,6 +110,69 @@ class LMSManipulatorXBlock(XBlock):
 #        del self.sessions[:]
 
     #def redirect()
+
+    @staticmethod
+    def chapters_read(csv_url):
+        """
+        Generate a course dictionary of chapters, subsections and units based on the structure provided in the CSV file
+        located at csv_url.
+        """
+
+        chapters = {}
+
+        try:
+
+            csv_file = urllib.urlopen(csv_url)
+            csv_reader = csv.reader(csv_file)
+
+            current_chapter = -1  # current
+            current_subsection = 0
+            current_unit = 0
+
+            # Skip line with column names
+            csv_reader.next()
+
+            for row in csv_reader:
+
+                # Add a new chapter to dictionary
+                if row[0] != "":
+                    chapters[str(current_chapter + 1)] = \
+                        {"name": row[0], "subsection": {}}
+                    current_chapter += 1
+                    current_subsection = -1
+
+                # Add a new subsection to current chapter
+                if row[1] != "":
+                    chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
+                        {"name": row[1], "unit": {}}
+                    current_subsection += 1
+                    current_unit = 0
+
+                # Add a new unit to current subsection
+                if row[2] != "":
+                    chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
+                        {"name": row[2], "url": row[3], "state": row[4]}
+                    current_unit += 1
+
+            csv_file.close()
+
+        except:
+            print("Something broke in CSV reading.")
+
+        return chapters
+
+    @staticmethod
+    def chapters_print(chapters):
+        """
+        Print all chapters in Python console in a hierarchy structure
+        """
+
+        for chapter in chapters:
+            print "+ " + chapters[chapter]["name"]
+            for subsection in chapters[chapter]["subsection"]:
+                print "\-+ " + chapters[chapter]["subsection"][subsection]["name"]
+                for unit in chapters[chapter]["subsection"][subsection]["unit"]:
+                    print "  |- " + chapters[chapter]["subsection"][subsection]["unit"][unit]["name"]
 
     def student_view(self, context=None):
         """

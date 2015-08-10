@@ -1,50 +1,58 @@
 import csv
-
-csv_file = open("sample.csv", "r")
-csv_reader = csv.reader(csv_file)
+import urllib
 
 chapters = {}
-current_chapter = -1 # current
-current_subsection = 0
-current_unit = 0
+csv_url = 'http://127.0.0.1:8080/sample.csv'
 
-# Skip line with column names
-csv_reader.next()
+def chapters_read(csv_url):
 
-for row in csv_reader:
+    csv_file = urllib.urlopen(csv_url)
+    csv_reader = csv.reader(csv_file)
 
-    # Add a new chapter to dictionary
-    if row[0] != "":
-        chapters[str(current_chapter + 1)] = \
-            {"name": row[0], "subsection": {}}
-        current_chapter += 1
-        current_subsection = -1
+    chapters = {}
+    current_chapter = -1 # current
+    current_subsection = 0
+    current_unit = 0
 
-    # Add a new subsection to current chapter
-    if row[1] != "":
-        chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
-            {"name": row[1], "unit": {}}
-        current_subsection += 1
-        current_unit = 0
+    # Skip line with column names
+    csv_reader.next()
 
-    # Add a new unit to current subsection
-    if row[2] != "":
-        chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
-            {"name": row[2], "url": row[3], "state": row[4]}
-        current_unit += 1
+    for row in csv_reader:
 
-csv_file.close()
+        # Add a new chapter to dictionary
+        if row[0] != "":
+            chapters[str(current_chapter + 1)] = \
+                {"name": row[0], "subsection": {}}
+            current_chapter += 1
+            current_subsection = -1
 
-current_line = ""
+        # Add a new subsection to current chapter
+        if row[1] != "":
+            chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
+                {"name": row[1], "unit": {}}
+            current_subsection += 1
+            current_unit = 0
 
-for chapter in chapters:
+        # Add a new unit to current subsection
+        if row[2] != "":
+            chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
+                {"name": row[2], "url": row[3], "state": row[4]}
+            current_unit += 1
 
-    print "+ " + chapters[chapter]["name"]
+    csv_file.close()
 
-    for subsection in chapters[chapter]["subsection"]:
+    return chapters
 
-        print "\-+ " + chapters[chapter]["subsection"][subsection]["name"]
+def chapters_print(chapters):
 
-        for unit in chapters[chapter]["subsection"][subsection]["unit"]:
+    for chapter in chapters:
 
-            print "  |- " + chapters[chapter]["subsection"][subsection]["unit"][unit]["name"]
+        print "+ " + chapters[chapter]["name"]
+
+        for subsection in chapters[chapter]["subsection"]:
+
+            print "\-+ " + chapters[chapter]["subsection"][subsection]["name"]
+
+            for unit in chapters[chapter]["subsection"][subsection]["unit"]:
+
+                print "  |- " + chapters[chapter]["subsection"][subsection]["unit"][unit]["name"]
