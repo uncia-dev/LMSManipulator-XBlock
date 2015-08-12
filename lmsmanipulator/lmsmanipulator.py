@@ -86,30 +86,19 @@ class LMSManipulatorXBlock(XBlock):
     )
 
     @XBlock.json_handler
-    def lmx_init(self, data, suffix=''):
+    def refresh_navigation(self, data, suffix=''):
 
-        #self.session_ended = False
+        content = {
+            "name": "",
+            "chapter": ""
+        }
 
-        #settings = {
-            #"tick_interval": self.tick_interval,
-        #}
+        if self.course_tree_student != {}:
 
-        settings = {}
-
-        return settings
-
-    @XBlock.json_handler
-    def refresh_sequence(self, data, suffix=''):
-
-        content = {"csv_object": ""}
+            content["name"] = self.course_tree_student["name"]
+            content["chapter"] = self.course_tree["chapter"]
 
         return content
-
-#    @staticmethod
-#    def clear_data(self):
-#        del self.sessions[:]
-
-    #def redirect()
 
     @staticmethod
     def course_tree_read(csv_url):
@@ -198,6 +187,16 @@ class LMSManipulatorXBlock(XBlock):
         Return datetime object generated from string str_time.
         """
         return datetime.datetime.strptime(str_time, '%Y-%m-%d %I:%M:%S.%f')
+
+    """
+    TODO:
+
+    set_chapter_visibility(chapter)
+    set_subsection_visibility(subsection)
+    set_unit_visibility(unit)
+    redirect_to(chapter, subsection, unit)
+
+    """
 
     def student_view(self, context=None):
         """

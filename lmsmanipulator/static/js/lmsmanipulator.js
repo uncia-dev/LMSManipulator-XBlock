@@ -1,17 +1,6 @@
 function LMSManipulatorXBlock(runtime, xblock_element) {
 
-    var sequence_list = [];
-
-    // Initialize this XBlock via an AJAX request
-    $.ajax({
-        type: "POST",
-        url: runtime.handlerUrl(xblock_element, 'lmx_init'),
-        data: JSON.stringify({}),
-        success: function(result) {
-
-        },
-        async: false
-    });
+    var course_tree = {};
 
     $('.button-previous').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase() === "false");
     $('.button-next').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase() === "false");
@@ -20,16 +9,15 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     $('.course-index').toggle("{{ self.hide_sidebar }}".toLocaleLowerCase() === "false");
 
     // Refresh LMS top navigation bar sequence
-    function refresh_sequence() {
+    function refresh_navigation() {
 
         $.ajax({
             type: "POST",
-            url: runtime.handlerUrl(xblock_element, 'refresh_sequence'),
+            url: runtime.handlerUrl(xblock_element, 'refresh_navigation'),
             data: JSON.stringify({}),
             success: function(result) {
-
-                console.log("csv reading here...");
-
+                course_tree['name'] = result.name;
+                course_tree['chapter'] = result.chapter;
             },
             async: false
         });
@@ -75,13 +63,34 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
         $('.course-index').toggle()
     });
 
+    $('.lmx_nav_top_bar').click(function() {
+        $('.sequence-nav').toggle()
+    });
+
+    $('.lmx_nav_bottom_bar').click(function() {
+        $('.sequence-bottom').toggle()
+    });
+
+    $('.lmx_course_material_bar').click(function() {
+        $('.course-material').toggle()
+    });
+
+    $('.lmx_global_nav_bar').click(function() {
+        $('#global-navigation').toggle()
+    });
+
+    $('.lmx_footer').click(function() {
+        $('div.wrapper.wrapper-footer').toggle()
+    });
+
     $( window ).unload(function() {
         chx_session_end(); // only works if using ComplexHTML
     });
 
     $(function ($) {
 
-        refresh_sequence();
+        refresh_navigation();
+        console.log(course_tree);
 
     });
 

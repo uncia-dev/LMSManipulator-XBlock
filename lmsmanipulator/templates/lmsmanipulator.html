@@ -1,8 +1,13 @@
 <div class="lmsmanipulator_block">
 
     <div class="lmx_controls">
-        <a class="lmx_sidebar" {% if not self.toggle_sidebar or self.hide_bar %} hidden {% endif %}>Sidebar</a>
-        <a class="lmx_prev">Previous</a>
+        <a class="lmx_global_nav_bar" hidden>Global Navigation Bar | </a>
+        <a class="lmx_course_material_bar" hidden>Course Material Bar | </a>
+        <a class="lmx_nav_top_bar" hidden>Top Navigation Bar | </a>
+        <a class="lmx_nav_bottom_bar" hidden>Bottom Navigation Bar | </a>
+        <a class="lmx_footer" hidden>Footer | </a>
+        <a class="lmx_sidebar" {% if not self.toggle_sidebar or self.hide_bar %} hidden {% endif %}>Sidebar | </a>
+        <a class="lmx_prev">Previous | </a>
         <a class="lmx_next">Next</a>
     </div>
 
@@ -11,6 +16,16 @@
         <hr/>
 
         <h3 style="color: blue">FOR DEVELOPMENT - Content Data From Database</h3>
+        <br/>
+
+        <h4>edX LMS Toggle Controls</h4>
+        <a class="lmx_global_nav_bar">Global Navigation Bar | </a>
+        <a class="lmx_course_material_bar">Course Material Bar | </a>
+        <a class="lmx_nav_top_bar">Top Navigation Bar | </a>
+        <a class="lmx_sidebar">Sidebar | </a>
+        <a class="lmx_nav_bottom_bar">Bottom Navigation Bar | </a>
+        <a class="lmx_footer">Footer</a>
+        <br/><br/>
 
         <h4>Display name</h4>
         <p>{{self.display_name}}</p>
