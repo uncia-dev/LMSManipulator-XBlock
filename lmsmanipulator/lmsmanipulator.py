@@ -28,12 +28,6 @@ class LMSManipulatorXBlock(XBlock):
         scope=Scope.settings
     )
 
-    course_url = String(
-        default="",
-        help="Course URL. Mandatory field.",
-        scope=Scope.content
-    )
-
     hide_nav_buttons = Boolean(
         default=False,
         help="Hide top navigation buttons in LMS",
@@ -64,6 +58,18 @@ class LMSManipulatorXBlock(XBlock):
         scope=Scope.content
     )
 
+    course_url = String(
+        default="",
+        help="Course URL. Mandatory field.",
+        scope=Scope.content
+    )
+
+    location_id = String(
+        default="",
+        help="Unit URL code. Mandatory field.",
+        scope=Scope.content
+    )
+
     csv_url = String(
         default="",
         help="URL to CSV containing slide ids and default states",
@@ -72,17 +78,20 @@ class LMSManipulatorXBlock(XBlock):
 
     dev_stuff = Boolean(
         help="Show chx_dev_stuff div in LMS?",
-        default=False, scope=Scope.content
+        default=False,
+        scope=Scope.content
     )
 
     course_tree = Dict(
-        help="List containing course tree read from specified CSV file",
-        default={}, scope=Scope.content
+        help="Dictionary containing course tree read from specified CSV file",
+        default={},
+        scope=Scope.content
     )
 
     course_tree_student = Dict(
-        help="List containing course tree adapted to the student's performance and progress",
-        default={}, scope=Scope.user_state
+        help="Dictionary containing course tree adapted to the student's performance and progress",
+        default={},
+        scope=Scope.user_state
     )
 
     @XBlock.json_handler
@@ -90,7 +99,8 @@ class LMSManipulatorXBlock(XBlock):
 
         content = {
             "name": "",
-            "chapter": ""
+            "chapter": "",
+            "location_id": self.location_id
         }
 
         if self.course_tree_student != {}:
@@ -118,7 +128,8 @@ class LMSManipulatorXBlock(XBlock):
         course_tree = {
             "time": str(datetime.datetime.now()),
             "name": "",
-            "chapter": {}
+            "chapter": {},
+            "unit_index": {}
         }
 
         try:
@@ -156,6 +167,7 @@ class LMSManipulatorXBlock(XBlock):
                 if row[2] != "":
                     course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
                         {"name": row[2], "url": row[3], "state": row[4]}
+                    course_tree["unit_index"][row[3]] = [current_chapter, current_subsection, current_unit]
                     current_unit += 1
 
             csv_file.close()
@@ -188,6 +200,37 @@ class LMSManipulatorXBlock(XBlock):
         """
         return datetime.datetime.strptime(str_time, '%Y-%m-%d %I:%M:%S.%f')
 
+    @XBlock.json_handler
+    def redirect(self, data, suffix=''):
+
+        """
+        Expected contents in data (must be numbers):
+
+            "chapter"
+            "subsection"
+            "unit"
+
+        """
+
+        # somewhere in here do a check to see if entered unit is in the same subsection as this unit
+
+        content = {"url": ""}
+
+        # Generate redirect URL only if all arguments are filled
+        # Note, no validation
+        if data["chapter"] != "" and data["subsection"] != "" and data["unit"] != "" and self.course_url != "":
+
+            try:
+
+                content["url"] += self.course_url + "jump_to/block-v1:edX+DemoX+Demo_Course+type@vertical+block@" + \
+                    self.course_tree["chapter"][data["chapter"]]["subsection"][data["subsection"]]["unit"][data["unit"]]["url"]
+
+            except KeyError:
+
+                content["url"] = "INVALID_COURSE_LOCATION"
+
+        return content
+
     """
     TODO:
 
@@ -214,10 +257,20 @@ class LMSManipulatorXBlock(XBlock):
             else:
 
                 # check if the course tree was updated
-                if self.get_time_from_string(self.course_tree['time']) > self.get_time_from_string(self.course_tree_student['time']):
+                #if self.get_time_from_string(self.course_tree['time']) > self.get_time_from_string(self.course_tree_student['time']):
 
                     # TODO: do stuff here that retains student settings for each unit
-                    self.course_tree_student = self.course_tree
+                self.course_tree_student = self.course_tree
+
+        try:
+
+            print self.course_tree
+            print "=========================="
+            print self.course_tree["unit_index"]
+
+        except:
+
+            print "snafu"
 
         fragment.add_content(render_template('templates/lmsmanipulator.html', content))
         fragment.add_css(load_resource("static/css/lmsmanipulator.css"))
