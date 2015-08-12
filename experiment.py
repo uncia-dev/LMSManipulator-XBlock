@@ -1,58 +1,72 @@
 import csv
+import json
+import datetime
 import urllib
 
-chapters = {}
+course_tree = {}
 csv_url = 'http://127.0.0.1:8080/sample.csv'
 
-def chapters_read(csv_url):
+def course_tree_read(csv_url):
 
-    csv_file = urllib.urlopen(csv_url)
-    csv_reader = csv.reader(csv_file)
+    course_tree = { \
+        "time": str(datetime.datetime.now()), \
+        "name": "", \
+        "chapter": {} \
+        }
 
-    chapters = {}
-    current_chapter = -1 # current
-    current_subsection = 0
-    current_unit = 0
+    try:
 
-    # Skip line with column names
-    csv_reader.next()
+        csv_file = urllib.urlopen(csv_url)
+        csv_reader = csv.reader(csv_file)        
 
-    for row in csv_reader:
+        current_chapter = -1
+        current_subsection = 0
+        current_unit = 0
 
-        # Add a new chapter to dictionary
-        if row[0] != "":
-            chapters[str(current_chapter + 1)] = \
-                {"name": row[0], "subsection": {}}
-            current_chapter += 1
-            current_subsection = -1
+        course_name = csv_reader.next() # Read course name
+        if course_name[0] == "COURSE_NAME":
+            course_tree["name"] = course_name[1]
+        
+        csv_reader.next() # Skip row with column names
 
-        # Add a new subsection to current chapter
-        if row[1] != "":
-            chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
-                {"name": row[1], "unit": {}}
-            current_subsection += 1
-            current_unit = 0
+        for row in csv_reader:
 
-        # Add a new unit to current subsection
-        if row[2] != "":
-            chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
-                {"name": row[2], "url": row[3], "state": row[4]}
-            current_unit += 1
+            # Add a new chapter to dictionary
+            if row[0] != "":
+                course_tree["chapter"][str(current_chapter + 1)] = \
+                    {"name": row[0], "subsection": {}}
+                current_chapter += 1
+                current_subsection = -1
 
-    csv_file.close()
+            # Add a new subsection to current chapter
+            if row[1] != "":
+                course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
+                    {"name": row[1], "unit": {}}
+                current_subsection += 1
+                current_unit = 0
 
-    return chapters
+            # Add a new unit to current subsection
+            if row[2] != "":
+                course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
+                    {"name": row[2], "url": row[3], "state": row[4]}
+                current_unit += 1
 
-def chapters_print(chapters):
+        csv_file.close()
 
-    for chapter in chapters:
+    except:
+        print("Something broke in CSV reading, most likely invalid URL.")
 
-        print "+ " + chapters[chapter]["name"]
+    return course_tree
 
-        for subsection in chapters[chapter]["subsection"]:
+def course_tree_print(course_tree):
 
-            print "\-+ " + chapters[chapter]["subsection"][subsection]["name"]
+    print course_tree["name"] + " (Last Edit: " + course_tree["time"] + ")"
+    for chapter in course_tree["chapter"]:
+        print "+ " + course_tree["chapter"][chapter]["name"]
+        for subsection in course_tree["chapter"][chapter]["subsection"]:
+            print "\-+ " + course_tree["chapter"][chapter]["subsection"][subsection]["name"]
+            for unit in course_tree["chapter"][chapter]["subsection"][subsection]["unit"]:
+                print "  |- " + course_tree["chapter"][chapter]["subsection"][subsection]["unit"][unit]["name"]
 
-            for unit in chapters[chapter]["subsection"][subsection]["unit"]:
-
-                print "  |- " + chapters[chapter]["subsection"][subsection]["unit"][unit]["name"]
+course_tree = course_tree_read(csv_url)
+course_tree_print(course_tree)

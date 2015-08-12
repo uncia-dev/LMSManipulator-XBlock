@@ -4,9 +4,6 @@
     <input type="text" class="lmx_display_name" value="{{ self.display_name }}">
     <br/>
 
-    <p class="lmx_desc">Course URL</p>
-    <input type="text" class="lmx_course_url" value="{{ self.course_url }}">
-
     <p class="lmx_desc">Hide top navigation buttons?</p>
     <input type="checkbox" class="lmx_hide_nav_buttons" {% if self.hide_nav_buttons %} checked {% endif %}>
     <br/>
@@ -27,7 +24,10 @@
     <input type="checkbox" class="lmx_toggle_sidebar" {% if self.toggle_sidebar %} checked {% endif %}>
     <br/>
 
-    <p class="lmx_desc">Chapters CSV URL</p>
+    <p class="lmx_desc">Course URL</p>
+    <input type="text" class="lmx_course_url" value="{{ self.course_url }}">
+
+    <p class="lmx_desc">Course Tree CSV URL</p>
     <input type="text" class="lmx_csv_url" value="{{ self.csv_url }}">
     <br/>
 

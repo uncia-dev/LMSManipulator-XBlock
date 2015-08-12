@@ -75,12 +75,12 @@ class LMSManipulatorXBlock(XBlock):
         default=False, scope=Scope.content
     )
 
-    chapters = List(
+    course_tree = Dict(
         help="List containing course tree read from specified CSV file",
         default={}, scope=Scope.content
     )
 
-    chapters_student = List(
+    course_tree_student = Dict(
         help="List containing course tree adapted to the student's performance and progress",
         default={}, scope=Scope.user_state
     )
@@ -112,73 +112,92 @@ class LMSManipulatorXBlock(XBlock):
     #def redirect()
 
     @staticmethod
-    def chapters_read(csv_url):
+    def course_tree_read(csv_url):
         """
-        Generate a course dictionary of chapters, subsections and units based on the structure provided in the CSV file
+        Generate a course dictionary of course_tree, subsections and units based on the structure provided in the CSV file
         located at csv_url.
         """
 
-        chapters = {}
-
-        #try:
-
-        csv_file = urllib.urlopen(csv_url)
-        csv_reader = csv.reader(csv_file)
-
-        # stuff breaks here
-
         '''
-        current_chapter = -1  # current
-        current_subsection = 0
-        current_unit = 0
-
-        # Skip line with column names
-        csv_reader.next()
-
-        for row in csv_reader:
-
-            # Add a new chapter to dictionary
-            if row[0] != "":
-                chapters[str(current_chapter + 1)] = \
-                    {"name": row[0], "subsection": {}}
-                current_chapter += 1
-                current_subsection = -1
-
-            # Add a new subsection to current chapter
-            if row[1] != "":
-                chapters[str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
-                    {"name": row[1], "unit": {}}
-                current_subsection += 1
-                current_unit = 0
-
-            # Add a new unit to current subsection
-            if row[2] != "":
-                chapters[str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
-                    {"name": row[2], "url": row[3], "state": row[4]}
-                current_unit += 1
-
-        csv_file.close()
+        states
+        vc - visible, but must complete
+        hc - hidden, but must complete
+        vs - visible, but skippable (default if column is blank)
+        hs - hidden, but skippable when visible
         '''
 
-        #except:
-        #print("Something broke in CSV reading.")
+        course_tree = {
+            "time": str(datetime.datetime.now()),
+            "name": "",
+            "chapter": {}
+        }
 
-        print (chapters)
+        try:
 
-        return chapters
+            csv_file = urllib.urlopen(csv_url)
+            csv_reader = csv.reader(csv_file)
+
+            current_chapter = -1
+            current_subsection = 0
+            current_unit = 0
+
+            course_name = csv_reader.next() # Read course name
+            if course_name[0] == "COURSE_NAME":
+                course_tree["name"] = course_name[1]
+
+            csv_reader.next() # Skip row with column names
+
+            for row in csv_reader:
+
+                # Add a new chapter to dictionary
+                if row[0] != "":
+                    course_tree["chapter"][str(current_chapter + 1)] = \
+                        {"name": row[0], "subsection": {}}
+                    current_chapter += 1
+                    current_subsection = -1
+
+                # Add a new subsection to current chapter
+                if row[1] != "":
+                    course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
+                        {"name": row[1], "unit": {}}
+                    current_subsection += 1
+                    current_unit = 0
+
+                # Add a new unit to current subsection
+                if row[2] != "":
+                    course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
+                        {"name": row[2], "url": row[3], "state": row[4]}
+                    current_unit += 1
+
+            csv_file.close()
+
+        except:
+
+            print("Something broke in CSV reading, most likely invalid URL.")
+
+        return course_tree
 
     @staticmethod
-    def chapters_print(chapters):
+    def course_tree_print(course_tree):
         """
-        Print all chapters in Python console in a hierarchy structure
+        Print all course_tree in Python console in a hierarchy structure
         """
 
-        for chapter in chapters:
-            print "+ " + chapters[chapter]["name"]
-            for subsection in chapters[chapter]["subsection"]:
-                print "\-+ " + chapters[chapter]["subsection"][subsection]["name"]
-                for unit in chapters[chapter]["subsection"][subsection]["unit"]:
-                    print "  |- " + chapters[chapter]["subsection"][subsection]["unit"][unit]["name"]
+        if course_tree != {}:
+            print course_tree["name"] + " (Last Edit: " + course_tree["time"] + ")"
+            for chapter in course_tree["chapter"]:
+                print "+ " + course_tree["chapter"][chapter]["name"]
+                for subsection in course_tree["chapter"][chapter]["subsection"]:
+                    print "\-+ " + course_tree["chapter"][chapter]["subsection"][subsection]["name"]
+                    for unit in course_tree["chapter"][chapter]["subsection"][subsection]["unit"]:
+                        print "  |- " + course_tree["chapter"][chapter]["subsection"][subsection]["unit"][unit]["name"]
+
+    @staticmethod
+    def get_time_from_string(str_time):
+        """
+        Return datetime object generated from string str_time.
+        """
+        return datetime.datetime.strptime(str_time, '%Y-%m-%d %I:%M:%S.%f')
 
     def student_view(self, context=None):
         """
@@ -186,18 +205,20 @@ class LMSManipulatorXBlock(XBlock):
         """
 
         fragment = Fragment()
-
         content = {'self': self}
 
-        print ("CSV TESTING ==========================")
-        print ("-----" + self.csv_url)
+        if self.course_tree != {}:
 
-        # compare chapters and chapters_students here
+            if self.course_tree_student == {}:
+                self.course_tree_student = self.course_tree
 
+            else:
 
-        self.chapters_read(self.csv_url)
-        #self.chapters_student = self.chapters_read(self.csv_url)
-        #self.chapters_print(self.chapters_student)
+                # check if the course tree was updated
+                if self.get_time_from_string(self.course_tree['time']) > self.get_time_from_string(self.course_tree_student['time']):
+
+                    # TODO: do stuff here that retains student settings for each unit
+                    self.course_tree_student = self.course_tree
 
         fragment.add_content(render_template('templates/lmsmanipulator.html', content))
         fragment.add_css(load_resource("static/css/lmsmanipulator.css"))
@@ -245,20 +266,8 @@ class LMSManipulatorXBlock(XBlock):
 
             self.csv_url = data["csv_url"]
 
-            # Generate course tree
-
             if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
-                print("nothing")
-                '''
-                states
-                vc - visible, but must complete
-                hc - hidden, but must complete
-                vs - visible, but skippable (default if column is blank)
-                hs - hidden, but skippable when visible
-                '''
-
-
-
+                self.course_tree = self.course_tree_read(self.csv_url)
 
         return result
 
