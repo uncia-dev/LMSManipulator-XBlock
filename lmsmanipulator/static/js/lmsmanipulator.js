@@ -81,12 +81,10 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     // Tell the server that this session is over
     $('.lmx_prev').click(function() {
         chx_session_end(); // only works if using ComplexHTML
-        goto_unit(0,0,0);
     });
 
     $('.lmx_next').click(function() {
         chx_session_end(); // only works if using ComplexHTML
-        goto_unit(3,1,0);
     });
 
     $('.lmx_sidebar').click(function() {
@@ -114,7 +112,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     });
 
     $("#sequence-list li").click(function() {
-       console.log("test");
+       chx_session_end(); // only works if using ComplexHTML
     });
 
     $( window ).unload(function() {
