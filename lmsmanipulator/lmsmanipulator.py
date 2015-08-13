@@ -94,6 +94,12 @@ class LMSManipulatorXBlock(XBlock):
         scope=Scope.user_state
     )
 
+    unit_index = Dict(
+        help="Dictionary containing unit location ids and their index. A reverse of course_tree",
+        default={},
+        scope=Scope.content
+    )
+
     @XBlock.json_handler
     def refresh_navigation(self, data, suffix=''):
 
@@ -129,8 +135,9 @@ class LMSManipulatorXBlock(XBlock):
             "time": str(datetime.datetime.now()),
             "name": "",
             "chapter": {},
-            "unit_index": {}
         }
+
+        unit_index = {}
 
         try:
 
@@ -167,7 +174,7 @@ class LMSManipulatorXBlock(XBlock):
                 if row[2] != "":
                     course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
                         {"name": row[2], "url": row[3], "state": row[4]}
-                    course_tree["unit_index"][row[3]] = [current_chapter, current_subsection, current_unit]
+                    unit_index[row[3]] = [current_chapter, current_subsection, current_unit]
                     current_unit += 1
 
             csv_file.close()
@@ -176,7 +183,7 @@ class LMSManipulatorXBlock(XBlock):
 
             print("Something broke in CSV reading, most likely invalid URL.")
 
-        return course_tree
+        return {"course_tree": course_tree, "unit_index": unit_index}
 
     @staticmethod
     def course_tree_print(course_tree):
@@ -185,13 +192,13 @@ class LMSManipulatorXBlock(XBlock):
         """
 
         if course_tree != {}:
-            print course_tree["name"] + " (Last Edit: " + course_tree["time"] + ")"
+            print(course_tree["name"] + " (Last Edit: " + course_tree["time"] + ")")
             for chapter in course_tree["chapter"]:
-                print "+ " + course_tree["chapter"][chapter]["name"]
+                print("+ " + course_tree["chapter"][chapter]["name"])
                 for subsection in course_tree["chapter"][chapter]["subsection"]:
-                    print "\-+ " + course_tree["chapter"][chapter]["subsection"][subsection]["name"]
+                    print("\-+ " + course_tree["chapter"][chapter]["subsection"][subsection]["name"])
                     for unit in course_tree["chapter"][chapter]["subsection"][subsection]["unit"]:
-                        print "  |- " + course_tree["chapter"][chapter]["subsection"][subsection]["unit"][unit]["name"]
+                        print("  |- " + course_tree["chapter"][chapter]["subsection"][subsection]["unit"][unit]["name"])
 
     @staticmethod
     def get_time_from_string(str_time):
@@ -201,7 +208,7 @@ class LMSManipulatorXBlock(XBlock):
         return datetime.datetime.strptime(str_time, '%Y-%m-%d %I:%M:%S.%f')
 
     @XBlock.json_handler
-    def redirect(self, data, suffix=''):
+    def goto_unit(self, data, suffix=''):
 
         """
         Expected contents in data (must be numbers):
@@ -212,22 +219,40 @@ class LMSManipulatorXBlock(XBlock):
 
         """
 
-        # somewhere in here do a check to see if entered unit is in the same subsection as this unit
+        content = {"url": "", "tab": "", "error": ""}
 
-        content = {"url": ""}
+        # TODO Check student course tree to see if student can view the redirect page !!!
 
-        # Generate redirect URL only if all arguments are filled
-        # Note, no validation
         if data["chapter"] != "" and data["subsection"] != "" and data["unit"] != "" and self.course_url != "":
 
             try:
 
-                content["url"] += self.course_url + "jump_to/block-v1:edX+DemoX+Demo_Course+type@vertical+block@" + \
-                    self.course_tree["chapter"][data["chapter"]]["subsection"][data["subsection"]]["unit"][data["unit"]]["url"]
+                # Check if goto unit is in the same chapter and subsection as current unit
+                if str(self.unit_index[self.location_id][0]) == data["chapter"] and \
+                                str(self.unit_index[self.location_id][1]) == data["subsection"]:
+
+                    print "inner"
+
+                    # Just specify the tab number if both units are in the same chapter and subsection
+                    if self.unit_index[self.location_id][2] != data["unit"]:
+                        # must be in the same subsection; switch tab only
+                        content["tab"] = data["unit"]
+
+                    # else will not redirect - same unit
+
+                else:
+
+                    # Generate redirect url if unit is not in the same chapter and subsection
+                    content["url"] += \
+                        self.course_url + \
+                        "jump_to/block-v1:edX+DemoX+Demo_Course+type@vertical+block@" + \
+                        self.course_tree["chapter"][data["chapter"]]["subsection"][data["subsection"]]["unit"][data["unit"]]["url"]
 
             except KeyError:
+                content["error"] = "LMS Manipulator: Unit not found."
 
-                content["url"] = "INVALID_COURSE_LOCATION"
+        else:
+            content["error"] = "Invalid parameters passed to goto_unit method."
 
         return content
 
@@ -237,7 +262,6 @@ class LMSManipulatorXBlock(XBlock):
     set_chapter_visibility(chapter)
     set_subsection_visibility(subsection)
     set_unit_visibility(unit)
-    redirect_to(chapter, subsection, unit)
 
     """
 
@@ -261,16 +285,6 @@ class LMSManipulatorXBlock(XBlock):
 
                     # TODO: do stuff here that retains student settings for each unit
                 self.course_tree_student = self.course_tree
-
-        try:
-
-            print self.course_tree
-            print "=========================="
-            print self.course_tree["unit_index"]
-
-        except:
-
-            print "snafu"
 
         fragment.add_content(render_template('templates/lmsmanipulator.html', content))
         fragment.add_css(load_resource("static/css/lmsmanipulator.css"))
@@ -305,7 +319,6 @@ class LMSManipulatorXBlock(XBlock):
         if len(data) > 0:
 
             self.display_name = data["display_name"]
-            self.course_url = data["course_url"]
             self.hide_nav_buttons = data["hide_nav_buttons"] == 1
             self.hide_nav = data["hide_nav"] == 1
             self.hide_sequence_bottom = data["hide_sequence_bottom"] == 1
@@ -316,10 +329,14 @@ class LMSManipulatorXBlock(XBlock):
             if self.hide_sidebar:
                 self.toggle_sidebar = False
 
+            self.course_url = data["course_url"]
+            self.location_id = data["location_id"]
             self.csv_url = data["csv_url"]
 
             if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
-                self.course_tree = self.course_tree_read(self.csv_url)
+                tree = self.course_tree_read(self.csv_url)
+                self.course_tree = tree["course_tree"]
+                self.unit_index = tree["unit_index"]
 
         return result
 
