@@ -231,8 +231,6 @@ class LMSManipulatorXBlock(XBlock):
                 if str(self.unit_index[self.location_id][0]) == data["chapter"] and \
                                 str(self.unit_index[self.location_id][1]) == data["subsection"]:
 
-                    print "inner"
-
                     # Just specify the tab number if both units are in the same chapter and subsection
                     if self.unit_index[self.location_id][2] != data["unit"]:
                         # must be in the same subsection; switch tab only

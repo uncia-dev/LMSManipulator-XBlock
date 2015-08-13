@@ -11,14 +11,6 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     // Refresh LMS top navigation bar sequence
     function refresh_navigation() {
 
-        /*
-            // Populate tabs bar, hide some of the tabs
-            $("#sequence-list li").each(function() {
-                $(this).hide();
-                // add end() event for each click ??
-            });
-        */
-
         $.ajax({
             type: "POST",
             url: runtime.handlerUrl(xblock_element, 'refresh_navigation'),
@@ -26,6 +18,22 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             success: function(result) {
                 course_tree['name'] = result.name;
                 course_tree['chapter'] = result.chapter;
+
+                // begin implementing chapter/subsection/unit hiding here
+
+                /*
+                    // Populate tabs bar, hide some of the tabs
+                    $("#sequence-list li").each(function() {
+                        $(this).hide();
+                        // add end() event for each click ??
+                        // OR add jquery listener for clicking on li objects from sequence-list
+                    });
+                */
+
+                console.log(course_tree);
+                console.log(course_tree["chapter"][0]["subsection"][0]["unit"][0]);
+                console.log(course_tree["chapter"][0]["subsection"][0]["unit"][0]["state"]);
+
             },
             async: false
         });
@@ -103,6 +111,10 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
     $('.lmx_footer').click(function() {
         $('div.wrapper.wrapper-footer').toggle()
+    });
+
+    $("#sequence-list li").click(function() {
+       console.log("test");
     });
 
     $( window ).unload(function() {
