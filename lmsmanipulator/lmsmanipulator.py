@@ -28,6 +28,18 @@ class LMSManipulatorXBlock(XBlock):
         scope=Scope.settings
     )
 
+    hide_global_nav_bar = Boolean(
+        default=False,
+        help="Hide global navigation bar",
+        scope=Scope.content
+    )
+
+    hide_course_material_bar = Boolean(
+        default=False,
+        help="Hide course material bar",
+        scope=Scope.content
+    )
+
     hide_nav_buttons = Boolean(
         default=False,
         help="Hide top navigation buttons in LMS",
@@ -55,6 +67,12 @@ class LMSManipulatorXBlock(XBlock):
     toggle_sidebar = Boolean(
         default=False,
         help="Toggle side bar in LMS",
+        scope=Scope.content
+    )
+
+    hide_footer = Boolean(
+        default=False,
+        help="Hide footer",
         scope=Scope.content
     )
 
@@ -123,14 +141,6 @@ class LMSManipulatorXBlock(XBlock):
         located at csv_url.
         """
 
-        '''
-        states
-        vc - visible, but must complete
-        hc - hidden, but must complete
-        vs - visible, but skippable (default if column is blank)
-        hs - hidden, but skippable when visible
-        '''
-
         course_tree = {
             "time": str(datetime.datetime.now()),
             "name": "",
@@ -148,7 +158,7 @@ class LMSManipulatorXBlock(XBlock):
             current_subsection = 0
             current_unit = 0
 
-            course_name = csv_reader.next() # Read course name
+            course_name = csv_reader.next()  # Read course name
             if course_name[0] == "COURSE_NAME":
                 course_tree["name"] = course_name[1]
 
@@ -173,7 +183,13 @@ class LMSManipulatorXBlock(XBlock):
                 # Add a new unit to current subsection
                 if row[2] != "":
                     course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection)]["unit"][str(current_unit)] = \
-                        {"name": row[2], "url": row[3], "state": row[4]}
+                        {
+                            "name": row[2],
+                            "url": row[3],
+                            "required": (row[4] == "1"),
+                            "visible": (row[5] == "1"),
+                            "completed": (row[6] == "1")
+                        }
                     unit_index[row[3]] = [current_chapter, current_subsection, current_unit]
                     current_unit += 1
 
@@ -206,6 +222,85 @@ class LMSManipulatorXBlock(XBlock):
         Return datetime object generated from string str_time.
         """
         return datetime.datetime.strptime(str_time, '%Y-%m-%d %I:%M:%S.%f')
+
+    @staticmethod
+    def get_unit_by_location(tree, chapter, subsection, unit):
+        '''
+        Return unit from tree based on its chapter/subsection/unit location
+        '''
+
+        result = {
+                "name": "",
+                "url:": "",
+                "required": False,
+                "visible": True,
+                "completed": False,
+                "chapter": -1,
+                "subsection": -1,
+                "unit": -1
+        }
+
+        try:
+
+            result = dict(tree["chapter"][str(chapter)]["subsection"][str(subsection)]["unit"][str(unit)])
+            result["chapter"] = chapter
+            result["subsection"] = subsection
+            result["unit"] = unit
+
+        except:
+
+            print ("Unit not found in course tree.")
+
+        return result
+
+    @staticmethod
+    def get_unit_by_url(tree, index, url):
+        '''
+        Return unit from tree based on its url
+        '''
+
+        result = {
+                "name": "",
+                "url:": "",
+                "required": False,
+                "visible": True,
+                "completed": False,
+                "chapter": -1,
+                "subsection": -1,
+                "unit": -1
+        }
+
+        try:
+
+            loc = index[url]
+            result = dict(tree["chapter"][str(loc[0])]["subsection"][str(loc[1])]["unit"][str(loc[2])])
+            result["chapter"] = loc[0]
+            result["subsection"] = loc[1]
+            result["unit"] = loc[2]
+
+        except:
+
+            print ("Unit not found in course tree.")
+
+        return result
+
+    @XBlock.json_handler
+    def get_unit(self, data, suffix=''):
+
+        if data["chapter"] != "" and data["subsection"] != "" and data["unit"] != "":
+            result = self.get_unit_by_location(
+                self.course_tree_student,
+                int(data["chapter"]),
+                int(data["subsection"]),
+                int(data["unit"])
+            )
+
+        else:
+            result = self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)
+
+        return result
+
+    # def for set_unit
 
     @XBlock.json_handler
     def goto_unit(self, data, suffix=''):
@@ -269,7 +364,12 @@ class LMSManipulatorXBlock(XBlock):
         """
 
         fragment = Fragment()
-        content = {'self': self}
+        content = {
+            'self': self,
+            'visible': True,
+            'required': False,
+            'completed': False
+        }
 
         if self.course_tree != {}:
 
@@ -279,10 +379,17 @@ class LMSManipulatorXBlock(XBlock):
             else:
 
                 # check if the course tree was updated
-                #if self.get_time_from_string(self.course_tree['time']) > self.get_time_from_string(self.course_tree_student['time']):
+                if self.course_tree['time'] == self.course_tree_student['time']:
+                    tmp = self.course_tree.copy()
+                    tmp.update(self.course_tree_student)
+                    self.course_tree_student = tmp
 
-                    # TODO: do stuff here that retains student settings for each unit
-                self.course_tree_student = self.course_tree
+            content["visible"] = \
+                self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)["visible"]
+            content["required"] = \
+                self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)["required"]
+            content["completed"] = \
+                self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)["completed"]
 
         fragment.add_content(render_template('templates/lmsmanipulator.html', content))
         fragment.add_css(load_resource("static/css/lmsmanipulator.css"))
@@ -317,11 +424,14 @@ class LMSManipulatorXBlock(XBlock):
         if len(data) > 0:
 
             self.display_name = data["display_name"]
+            self.hide_global_nav_bar = data["hide_global_nav_bar"] == 1
+            self.hide_course_material_bar = data["hide_course_material_bar"] == 1
             self.hide_nav_buttons = data["hide_nav_buttons"] == 1
             self.hide_nav = data["hide_nav"] == 1
             self.hide_sequence_bottom = data["hide_sequence_bottom"] == 1
             self.hide_sidebar = data["hide_sidebar"] == 1
             self.toggle_sidebar = data["toggle_sidebar"] == 1
+            self.hide_footer = data["hide_footer"] == 1
             self.dev_stuff = data["dev_stuff"] == 1
 
             if self.hide_sidebar:
@@ -331,10 +441,9 @@ class LMSManipulatorXBlock(XBlock):
             self.location_id = data["location_id"]
             self.csv_url = data["csv_url"]
 
-            if self.csv_url[:4] == "http" and self.csv_url[-3:] == "csv":
-                tree = self.course_tree_read(self.csv_url)
-                self.course_tree = tree["course_tree"]
-                self.unit_index = tree["unit_index"]
+            tree = self.course_tree_read(self.csv_url)
+            self.course_tree = tree["course_tree"]
+            self.unit_index = tree["unit_index"]
 
         return result
 

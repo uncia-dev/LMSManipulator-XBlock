@@ -1,5 +1,13 @@
 <div class="lmsmanipulator_block">
 
+    <div class="lmx_error" hidden>
+        <p>Sorry, you cannot view this unit. Please go back.</p>
+    </div>
+
+    <div class="lmx_completed" hidden>
+        <p>You have completed this unit.</p>
+    </div>
+
     <div class="lmx_controls">
         <a class="lmx_global_nav_bar" hidden>Global Navigation Bar | </a>
         <a class="lmx_course_material_bar" hidden>Course Material Bar | </a>
@@ -31,6 +39,14 @@
         <p>{{ self.display_name }}</p>
         <br/>
 
+        <h4>Hide Global Navigation Bar?</h4>
+        <p>{{ self.hide_global_nav_bar }}</p>
+        <br/>
+
+        <h4>Hide Course Material Bar?</h4>
+        <p>{{ self.hide_course_material_bar }}</p>
+        <br/>
+
         <h4>Hide Top Navigation Buttons?</h4>
         <p>{{ self.hide_nav_buttons }}</p>
         <br/>
@@ -49,6 +65,10 @@
 
         <h4>Students can toggle Sidebar?</h4>
         <p>{{ self.toggle_sidebar }}</p>
+        <br/>
+
+        <h4>Hide footer?</h4>
+        <p>{{ self.hide_footer }}</p>
         <br/>
 
         <h4>Course URL</h4>

@@ -4,6 +4,14 @@
     <input type="text" class="lmx_display_name" value="{{ self.display_name }}">
     <br/>
 
+    <p class="lmx_desc">Hide global navigation bar</p>
+    <input type="checkbox" class="lmx_hide_global_nav_bar" {% if self.hide_global_nav_bar %} checked {% endif %}>
+    <br/>
+
+    <p class="lmx_desc">Hide course material bar</p>
+    <input type="checkbox" class="lmx_hide_course_material_bar" {% if self.hide_course_material_bar %} checked {% endif %}>
+    <br/>
+
     <p class="lmx_desc">Hide top navigation buttons?</p>
     <input type="checkbox" class="lmx_hide_nav_buttons" {% if self.hide_nav_buttons %} checked {% endif %}>
     <br/>
@@ -22,6 +30,10 @@
 
     <p class="lmx_desc">Allow student to toggle sidebar?</p>
     <input type="checkbox" class="lmx_toggle_sidebar" {% if self.toggle_sidebar %} checked {% endif %}>
+    <br/>
+
+    <p class="lmx_desc">Hide footer</p>
+    <input type="checkbox" class="lmx_hide_footer" {% if self.hide_global_footer %} checked {% endif %}>
     <br/>
 
     <p class="lmx_desc">Course URL</p>

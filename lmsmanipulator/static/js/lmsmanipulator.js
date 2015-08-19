@@ -1,16 +1,49 @@
 function LMSManipulatorXBlock(runtime, xblock_element) {
 
     var course_tree = {};
+    var unit_data = {};
 
-    $('.button-previous').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase() === "false");
-    $('.button-next').toggle("{{ self.hide_nav_buttons }}".toLocaleLowerCase() === "false");
-    $(".sequence-list-wrapper").toggle("{{ self.hide_nav }}".toLocaleLowerCase() === "false");
-    $('.sequence-bottom').toggle("{{ self.hide_sequence_bottom }}".toLocaleLowerCase() === "false");
-    $('.course-index').toggle("{{ self.hide_sidebar }}".toLocaleLowerCase() === "false");
+    $('#global-navigation').toggle("{{ self.hide_global_nav_bar }}" == "False");
+    $('.course-material').toggle("{{ self.hide_course_material_bar }}" == "False");
+    $('.sequence-nav').toggle("{{ self.hide_nav }}" == "False");
+    $('.button-previous').toggle("{{ self.hide_nav_buttons }}" == "False");
+    $('.button-next').toggle("{{ self.hide_nav_buttons }}" == "False");
+    $('.course-index').toggle("{{ self.hide_sidebar }}" == "False");
+    $('.sequence-bottom').toggle("{{ self.hide_sequence_bottom }}" == "False");
+    $('div.wrapper.wrapper-footer').toggle("{{ self.hide_footer }}" == "False");
+
+    function get_unit(chapter, subsection, unit){
+
+        var unit_data = {};
+
+        $.ajax({
+            type: "POST",
+            url: runtime.handlerUrl(xblock_element, 'get_unit'),
+            data: JSON.stringify({
+                "chapter": (chapter === undefined) ? "" : chapter,
+                "subsection": (subsection === undefined) ? "": chapter,
+                "unit": (unit === undefined) ? "": unit
+            }),
+            success: function(result) {
+                unit_data["name"] = result.name;
+                unit_data["url"] = result.url;
+                unit_data["visible"] = result.visible;
+                unit_data["required"] = result.required;
+                unit_data["completed"] = result.completed;
+                unit_data["chapter"] = result.chapter;
+                unit_data["subsection"] = result.subsection;
+                unit_data["unit"] = result.unit;
+            },
+            async: false
+        });
+
+        return unit_data;
+    }
 
     // Refresh LMS top navigation bar sequence
     function refresh_navigation() {
 
+        // Update the course tree in the student's browser
         $.ajax({
             type: "POST",
             url: runtime.handlerUrl(xblock_element, 'refresh_navigation'),
@@ -18,25 +51,44 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             success: function(result) {
                 course_tree['name'] = result.name;
                 course_tree['chapter'] = result.chapter;
-
-                // begin implementing chapter/subsection/unit hiding here
-
-                /*
-                    // Populate tabs bar, hide some of the tabs
-                    $("#sequence-list li").each(function() {
-                        $(this).hide();
-                        // add end() event for each click ??
-                        // OR add jquery listener for clicking on li objects from sequence-list
-                    });
-                */
-
-                console.log(course_tree);
-                console.log(course_tree["chapter"][0]["subsection"][0]["unit"][0]);
-                console.log(course_tree["chapter"][0]["subsection"][0]["unit"][0]["state"]);
-
+                console.log(course_tree);   // TODO: DELETE ME
             },
             async: false
         });
+
+        // Override the LMS navigation
+        if (course_tree["name"] !== "") {
+
+            unit_data = get_unit();
+
+            console.log(unit_data.chapter);
+            console.log(unit_data.subsection);
+            console.log(unit_data.unit);
+            console.log(unit_data.visible);
+
+            // use this "{{required}}" when doing redirects?
+
+            // Override subsection tabs
+            var curr_unit = {};
+            $("#sequence-list li").each(function(idx, li) {
+                curr_unit = course_tree['chapter'][unit_data.chapter]['subsection'][unit_data.subsection]['unit'][idx];
+                if (curr_unit == undefined || !curr_unit["visible"])
+                    $(li).hide();
+            });
+
+
+            //$("#sequence-list li").each(function() {
+
+                //console.log(this);
+                //console.log(this.location);
+                //console.log(this.index());
+
+                //$(this).hide();
+                // add end() event for each click ??
+                // OR add jquery listener for clicking on li objects from sequence-list
+            //});
+
+        }
 
     }
 
@@ -88,30 +140,32 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     });
 
     $('.lmx_sidebar').click(function() {
-        $('.course-index').toggle()
+        $('.course-index').toggle();
     });
 
     $('.lmx_nav_top_bar').click(function() {
-        $('.sequence-nav').toggle()
+        $('.sequence-nav').toggle();
+        $('.button-previous').toggle();
+        $('.button-next').toggle();
     });
 
     $('.lmx_nav_bottom_bar').click(function() {
-        $('.sequence-bottom').toggle()
+        $('.sequence-bottom').toggle();
     });
 
     $('.lmx_course_material_bar').click(function() {
-        $('.course-material').toggle()
+        $('.course-material').toggle();
     });
 
     $('.lmx_global_nav_bar').click(function() {
-        $('#global-navigation').toggle()
+        $('#global-navigation').toggle();
     });
 
     $('.lmx_footer').click(function() {
-        $('div.wrapper.wrapper-footer').toggle()
+        $('div.wrapper.wrapper-footer').toggle();
     });
 
-    $("#sequence-list li").click(function() {
+    $("#sequence-list > li > a").click(function() {
        chx_session_end(); // only works if using ComplexHTML
     });
 
@@ -122,7 +176,21 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     $(function ($) {
 
         refresh_navigation();
-        console.log(course_tree);
+
+        if ("{{visible}}" == "False") {
+
+            $(".lmx_error").show();
+
+            for (var i=0; i < $(".vert-mod > div").length; i++) {
+	            if ($(("#seq_content > div > div > div.vert.vert-" + i)).attr("data-id").indexOf("lmsmanipulator+block") == -1)
+                    $((".vert-" + i)).empty();
+            }
+
+        }
+
+        if ("{{completed}}" == "True") {
+            $(".lmx_completed").show();
+        }
 
     });
 
