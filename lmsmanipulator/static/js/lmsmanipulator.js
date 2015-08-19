@@ -43,6 +43,8 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     // Refresh LMS top navigation bar sequence
     function refresh_navigation() {
 
+        // use this "{{required}}" when doing redirects?
+
         // Update the course tree in the student's browser
         $.ajax({
             type: "POST",
@@ -59,6 +61,8 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
         // Override the LMS navigation
         if (course_tree["name"] !== "") {
 
+            $('.button-previous').toggle(false);
+            $('.button-next').toggle(false);
             unit_data = get_unit();
 
             console.log(unit_data.chapter);
@@ -66,7 +70,17 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             console.log(unit_data.unit);
             console.log(unit_data.visible);
 
-            // use this "{{required}}" when doing redirects?
+            // Override chapter buttons
+            var curr_chapter = {};
+            $("#accordion nav div").each(function(idx, div) {
+                curr_chapter = course_tree['chapter'][idx];
+                if (curr_chapter == undefined || !curr_chapter["visible"])
+                    $(div).hide();
+            });
+
+            // Override subsection buttons
+            var curr_subsection = {};
+
 
             // Override subsection tabs
             var curr_unit = {};
@@ -75,18 +89,6 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
                 if (curr_unit == undefined || !curr_unit["visible"])
                     $(li).hide();
             });
-
-
-            //$("#sequence-list li").each(function() {
-
-                //console.log(this);
-                //console.log(this.location);
-                //console.log(this.index());
-
-                //$(this).hide();
-                // add end() event for each click ??
-                // OR add jquery listener for clicking on li objects from sequence-list
-            //});
 
         }
 

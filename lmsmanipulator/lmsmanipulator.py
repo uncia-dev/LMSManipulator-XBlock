@@ -169,14 +169,14 @@ class LMSManipulatorXBlock(XBlock):
                 # Add a new chapter to dictionary
                 if row[0] != "":
                     course_tree["chapter"][str(current_chapter + 1)] = \
-                        {"name": row[0], "subsection": {}}
+                        {"name": row[0], "visible": (row[5] == "1"), "subsection": {}}
                     current_chapter += 1
                     current_subsection = -1
 
                 # Add a new subsection to current chapter
                 if row[1] != "":
                     course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
-                        {"name": row[1], "unit": {}}
+                        {"name": row[1], "visible": (row[5] == "1"), "unit": {}}
                     current_subsection += 1
                     current_unit = 0
 
