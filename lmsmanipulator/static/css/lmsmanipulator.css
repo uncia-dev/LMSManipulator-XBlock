@@ -6,3 +6,7 @@
     text-align: center;
     color: red;
 }
+
+.lmx_disabled {
+    visibility: hidden;
+}

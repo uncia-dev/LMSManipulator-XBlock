@@ -363,6 +363,8 @@ class LMSManipulatorXBlock(XBlock):
         The LMS view
         """
 
+        print "======== LMS ========================"
+
         fragment = Fragment()
         content = {
             'self': self,
@@ -383,13 +385,6 @@ class LMSManipulatorXBlock(XBlock):
                     tmp = self.course_tree.copy()
                     tmp.update(self.course_tree_student)
                     self.course_tree_student = tmp
-
-            content["visible"] = \
-                self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)["visible"]
-            content["required"] = \
-                self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)["required"]
-            content["completed"] = \
-                self.get_unit_by_url(self.course_tree_student, self.unit_index, self.location_id)["completed"]
 
         fragment.add_content(render_template('templates/lmsmanipulator.html', content))
         fragment.add_css(load_resource("static/css/lmsmanipulator.css"))

@@ -25,14 +25,14 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
                 "unit": (unit === undefined) ? "": unit
             }),
             success: function(result) {
-                unit_data["name"] = result.name;
-                unit_data["url"] = result.url;
-                unit_data["visible"] = result.visible;
-                unit_data["required"] = result.required;
-                unit_data["completed"] = result.completed;
-                unit_data["chapter"] = result.chapter;
-                unit_data["subsection"] = result.subsection;
-                unit_data["unit"] = result.unit;
+                unit_data["name"] = (result.name == undefined) ? "": result.name;
+                unit_data["url"] = (result.name == undefined) ? "": result.url;
+                unit_data["visible"] = (result.visible == undefined) ? false: result.visible;
+                unit_data["required"] = (result.required == undefined) ? false: result.required;
+                unit_data["completed"] = (result.completed == undefined) ? false: result.completed;
+                unit_data["chapter"] = (result.chapter == undefined) ? -1: result.chapter;
+                unit_data["subsection"] = (result.subsection == undefined) ? -1: result.subsection;
+                unit_data["unit"] = (result.unit == undefined) ? -1: result.unit;
             },
             async: false
         });
@@ -65,29 +65,36 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             $('.button-next').toggle(false);
             unit_data = get_unit();
 
-            console.log(unit_data.chapter);
-            console.log(unit_data.subsection);
-            console.log(unit_data.unit);
-            console.log(unit_data.visible);
+            // Overrides go here
 
-            // Override chapter buttons
+            /*
+            Every affected item has "lmx_disabled" added to its class properties;
+            CSS will handle the visibility of these items.
+             */
+
+            // Override chapter and subsection sidebar
             var curr_chapter = {};
-            $("#accordion nav div").each(function(idx, div) {
-                curr_chapter = course_tree['chapter'][idx];
+            var curr_subsection = {};
+            $("#accordion nav div").each(function(idxc, div) {
+
+                curr_chapter = course_tree['chapter'][idxc];
                 if (curr_chapter == undefined || !curr_chapter["visible"])
-                    $(div).hide();
+                    $(div).prop("class", $(div).prop("class") + " lmx_disabled");
+
+                $(div).children("ul").children("li").each(function(idxs, li) {
+                    curr_subsection = course_tree['chapter'][idxc]['subsection'][idxs];
+                    if (curr_subsection == undefined || !curr_subsection["visible"])
+		                $(li).prop("class", $(li).prop("class") + " lmx_disabled");
+                });
+
             });
 
-            // Override subsection buttons
-            var curr_subsection = {};
-
-
-            // Override subsection tabs
+            // Override subsection tabs (ie units)
             var curr_unit = {};
             $("#sequence-list li").each(function(idx, li) {
                 curr_unit = course_tree['chapter'][unit_data.chapter]['subsection'][unit_data.subsection]['unit'][idx];
                 if (curr_unit == undefined || !curr_unit["visible"])
-                    $(li).hide();
+                    $(li).prop("class", $(li).prop("class") + " lmx_disabled");
             });
 
         }
@@ -179,10 +186,9 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
         refresh_navigation();
 
-        if ("{{visible}}" == "False") {
+        if (unit_data["visible"] == false) {
 
             $(".lmx_error").show();
-
             for (var i=0; i < $(".vert-mod > div").length; i++) {
 	            if ($(("#seq_content > div > div > div.vert.vert-" + i)).attr("data-id").indexOf("lmsmanipulator+block") == -1)
                     $((".vert-" + i)).empty();
@@ -190,7 +196,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
         }
 
-        if ("{{completed}}" == "True") {
+        if (unit_data["completed"] == false) {
             $(".lmx_completed").show();
         }
 
