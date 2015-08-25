@@ -25,17 +25,21 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
                 "unit": (unit === undefined) ? "": unit
             }),
             success: function(result) {
-                unit_data["name"] = (result.name == undefined) ? "": result.name;
-                unit_data["url"] = (result.name == undefined) ? "": result.url;
-                unit_data["visible"] = (result.visible == undefined) ? false: result.visible;
-                unit_data["required"] = (result.required == undefined) ? false: result.required;
-                unit_data["completed"] = (result.completed == undefined) ? false: result.completed;
-                unit_data["chapter"] = (result.chapter == undefined) ? -1: result.chapter;
-                unit_data["subsection"] = (result.subsection == undefined) ? -1: result.subsection;
-                unit_data["unit"] = (result.unit == undefined) ? -1: result.unit;
+                unit_data["name"] = (result.name == undefined) ? "" : result.name;
+                unit_data["url"] = (result.name == undefined) ? "" : result.url;
+                unit_data["required"] = (result.required == undefined) ? false : result.required;
+                unit_data["enabled"] = (result.enabled == undefined) ? false : result.enabled;
+                unit_data["visible"] = (result.visible == undefined) ? false : result.visible;
+                unit_data["unlocks"] = (result.unlocks == undefined) ? [] : result.unlocks;
+                unit_data["completed"] = (result.completed == undefined) ? false : result.completed;
+                unit_data["chapter"] = (result.chapter == undefined) ? -1 : result.chapter;
+                unit_data["subsection"] = (result.subsection == undefined) ? -1 : result.subsection;
+                unit_data["unit"] = (result.unit == undefined) ? -1 : result.unit;
             },
             async: false
         });
+
+        console.log(unit_data);
 
         return unit_data;
     }
@@ -192,6 +196,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
     $('.lmx_footer').click(function() {
         $('div.wrapper.wrapper-footer').toggle();
+        refresh_navigation();
     });
 
     $("#sequence-list > li > a").click(function() {
@@ -206,7 +211,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
         refresh_navigation();
 
-        if (unit_data["visible"] == false) {
+        if (unit_data["visible"] === false) {
 
             $(".lmx_error").show();
             for (var i=0; i < $(".vert-mod > div").length; i++) {
@@ -216,7 +221,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
         }
 
-        if (unit_data["completed"] == false) {
+        if (unit_data["completed"] === true) {
             $(".lmx_completed").show();
         }
 
