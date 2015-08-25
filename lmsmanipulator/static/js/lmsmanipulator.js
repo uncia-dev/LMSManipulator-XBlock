@@ -43,8 +43,6 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     // Refresh LMS top navigation bar sequence
     function refresh_navigation() {
 
-        // use this "{{required}}" when doing redirects?
-
         // Update the course tree in the student's browser
         $.ajax({
             type: "POST",
@@ -78,13 +76,27 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             $("#accordion nav div").each(function(idxc, div) {
 
                 curr_chapter = course_tree['chapter'][idxc];
+
+                if (curr_chapter == undefined || !curr_chapter["enabled"])
+                    $(div).css({
+                        "background-color": "lightgrey"
+                    });
+
                 if (curr_chapter == undefined || !curr_chapter["visible"])
-                    $(div).prop("class", $(div).prop("class") + " lmx_disabled");
+                    $(div).prop("class", $(div).prop("class") + " lmx_hidden");
 
                 $(div).children("ul").children("li").each(function(idxs, li) {
                     curr_subsection = course_tree['chapter'][idxc]['subsection'][idxs];
+
+                    if (curr_subsection == undefined || !curr_subsection["enabled"])
+                        $(li).css({
+                               "pointer-events": "none",
+                               "background-color": "lightgrey"
+                        });
+
                     if (curr_subsection == undefined || !curr_subsection["visible"])
-		                $(li).prop("class", $(li).prop("class") + " lmx_disabled");
+                        $(li).prop("class", $(li).prop("class") + " lmx_hidden");
+
                 });
 
             });
@@ -93,8 +105,16 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             var curr_unit = {};
             $("#sequence-list li").each(function(idx, li) {
                 curr_unit = course_tree['chapter'][unit_data.chapter]['subsection'][unit_data.subsection]['unit'][idx];
+
+                if (curr_unit == undefined || !curr_unit["enabled"])
+                    $(li).css({
+                        "pointer-events": "none",
+                        "background-color": "grey"
+                    });
+
                 if (curr_unit == undefined || !curr_unit["visible"])
-                    $(li).prop("class", $(li).prop("class") + " lmx_disabled");
+                    $(li).prop("class", $(li).prop("class") + " lmx_hidden");
+
             });
 
         }

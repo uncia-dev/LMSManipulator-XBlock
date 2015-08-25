@@ -168,15 +168,23 @@ class LMSManipulatorXBlock(XBlock):
 
                 # Add a new chapter to dictionary
                 if row[0] != "":
-                    course_tree["chapter"][str(current_chapter + 1)] = \
-                        {"name": row[0], "visible": (row[5] == "1"), "subsection": {}}
+                    course_tree["chapter"][str(current_chapter + 1)] = {
+                        "name": row[0],
+                        "enabled": (row[5] == "1"),
+                        "visible": (row[6] == "1"),
+                        "subsection": {}
+                    }
                     current_chapter += 1
                     current_subsection = -1
 
                 # Add a new subsection to current chapter
                 if row[1] != "":
-                    course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection + 1)] = \
-                        {"name": row[1], "visible": (row[5] == "1"), "unit": {}}
+                    course_tree["chapter"][str(current_chapter)]["subsection"][str(current_subsection + 1)] = {
+                        "name": row[1],
+                        "enabled": (row[5] == "1"),
+                        "visible": (row[6] == "1"),
+                        "unit": {}
+                    }
                     current_subsection += 1
                     current_unit = 0
 
@@ -187,8 +195,10 @@ class LMSManipulatorXBlock(XBlock):
                             "name": row[2],
                             "url": row[3],
                             "required": (row[4] == "1"),
-                            "visible": (row[5] == "1"),
-                            "completed": (row[6] == "1")
+                            "enabled": (row[5] == "1"),
+                            "visible": (row[6] == "1"),
+                            "completed": (row[7] == "1"),
+                            "unlocks": row[8].split(';')
                         }
                     unit_index[row[3]] = [current_chapter, current_subsection, current_unit]
                     current_unit += 1
@@ -233,8 +243,10 @@ class LMSManipulatorXBlock(XBlock):
                 "name": "",
                 "url:": "",
                 "required": False,
+                "enabled": False,
                 "visible": True,
                 "completed": False,
+                "unlocks": [],
                 "chapter": -1,
                 "subsection": -1,
                 "unit": -1
@@ -263,8 +275,10 @@ class LMSManipulatorXBlock(XBlock):
                 "name": "",
                 "url:": "",
                 "required": False,
+                "enabled": False,
                 "visible": True,
                 "completed": False,
+                "unlocks": [],
                 "chapter": -1,
                 "subsection": -1,
                 "unit": -1
@@ -367,10 +381,7 @@ class LMSManipulatorXBlock(XBlock):
 
         fragment = Fragment()
         content = {
-            'self': self,
-            'visible': True,
-            'required': False,
-            'completed': False
+            'self': self
         }
 
         if self.course_tree != {}:
