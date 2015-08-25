@@ -234,6 +234,8 @@ class LMSManipulatorXBlock(XBlock):
         Return unit from tree based on its chapter/subsection/unit location
         '''
 
+        # Note that result["data"] is a reference, not a copy of the unit!
+
         result = {
             "data": {},
             "chapter": -1,
@@ -259,6 +261,8 @@ class LMSManipulatorXBlock(XBlock):
         '''
         Return unit from tree based on its url
         '''
+
+        # Note that result["data"] is a reference, not a copy of the unit!
 
         result = {
             "data": {},

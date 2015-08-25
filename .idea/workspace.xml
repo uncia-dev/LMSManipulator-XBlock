@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e7efdab-8300-4ca7-b101-71c30568410e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.~lock.sample.csv#" afterPath="$PROJECT_DIR$/.~lock.sample.csv#" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator.html" afterPath="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js" afterPath="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py" afterPath="$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample.csv" afterPath="$PROJECT_DIR$/sample.csv" />
     </list>
     <ignored path="LMSManipulator-XBlock.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -91,8 +87,8 @@
       <file leaf-file-name="lmsmanipulator.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4560547">
-              <caret line="276" column="0" selection-start-line="276" selection-start-column="0" selection-end-line="276" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.71972656">
+              <caret line="264" column="74" selection-start-line="264" selection-start-column="74" selection-end-line="264" selection-end-column="74" />
               <folding>
                 <element signature="e#250#291#0" expanded="true" />
               </folding>
@@ -693,8 +689,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4560547">
-          <caret line="276" column="0" selection-start-line="276" selection-start-column="0" selection-end-line="276" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.71972656">
+          <caret line="264" column="74" selection-start-line="264" selection-start-column="74" selection-end-line="264" selection-end-column="74" />
           <folding>
             <element signature="e#250#291#0" expanded="true" />
           </folding>
