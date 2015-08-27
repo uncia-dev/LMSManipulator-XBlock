@@ -1,25 +1,48 @@
 function LMSManipulatorXBlock(runtime, xblock_element) {
 
-    var location_id = "";
-    var course_tree = {};
-    var unit_data = {};
+    var location_id = ""; // url of this unit
+    var course_tree = {}; // course tree JSON
+    var unit_data = {}; // data of current unit
 
-    $('#global-navigation').toggle("{{ self.hide_global_nav_bar }}" == "False");
-    $('.course-material').toggle("{{ self.hide_course_material_bar }}" == "False");
-    $('.sequence-nav').toggle("{{ self.hide_nav }}" == "False");
-    $('.button-previous').toggle("{{ self.hide_nav_buttons }}" == "False");
-    $('.button-next').toggle("{{ self.hide_nav_buttons }}" == "False");
-    $('.course-index').toggle("{{ self.hide_sidebar }}" == "False");
-    $('.sequence-bottom').toggle("{{ self.hide_sequence_bottom }}" == "False");
-    $('div.wrapper.wrapper-footer').toggle("{{ self.hide_footer }}" == "False");
+    // Set component visibilities depending on the Studio side settings
+    $(".course-index").toggle("{{ self.hide_bar }}" == "False");
+    $("#global-navigation").toggle("{{ self.hide_global_nav_bar }}" == "False");
+    $(".course-material").toggle("{{ self.hide_course_material_bar }}" == "False");
+    $(".sequence-nav").toggle("{{ self.hide_nav }}" == "False");
+    $(".button-previous").toggle("{{ self.hide_nav_buttons }}" == "False");
+    $(".button-next").toggle("{{ self.hide_nav_buttons }}" == "False");
+    $(".course-index").toggle("{{ self.hide_sidebar }}" == "False");
+    $(".sequence-bottom").toggle("{{ self.hide_sequence_bottom }}" == "False");
+    $("div.wrapper.wrapper-footer").toggle("{{ self.hide_footer }}" == "False");
+    $(".container-footer").toggle("{{ self.hide_footer }}" == "False");
 
+    // Add toggle sidebar button
+    if ("{{ self.toggle_sidebar }}" == "True") {
+
+        $("<div class=\"lmx_sidebar\" role=\"navigation\"></div>").insertAfter(".course-index");
+        $(".lmx_sidebar").css({
+            "display": "table-cell",
+            "width": "5px",
+            "border-width": "1px",
+            "background-color": "gray"
+        }).hover(
+            function() { $(this).css("background-color", "#0078B0");},
+            function() { $(this).css("background-color", "gray"); }
+        ).click(function() { $(".course-index").toggle(); });
+
+    }
+
+    /*
+    Return unit data at specified chapter, subsection, unit indices.
+    If all fields are blank, return current unit data.
+    */
     function get_unit(chapter, subsection, unit){
 
         var unit_data = {};
 
         $.ajax({
             type: "POST",
-            url: runtime.handlerUrl(xblock_element, 'get_unit'),
+            url: runtime.handlerUrl(xblock_element, "get_unit"),
             data: JSON.stringify({
                 "chapter": (chapter === undefined) ? "" : chapter,
                 "subsection": (subsection === undefined) ? "": chapter,
@@ -43,58 +66,48 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
         return unit_data;
     }
 
-    // Refresh LMS top navigation bar sequence
+    /*
+    Refresh the LMS chapter, subsection and unit buttons
+    */
     function refresh_navigation() {
 
-        // Update the course tree in the student's browser
+        // Update the course tree
         $.ajax({
             type: "POST",
-            url: runtime.handlerUrl(xblock_element, 'refresh_navigation'),
+            url: runtime.handlerUrl(xblock_element, "refresh_navigation"),
             data: JSON.stringify({}),
             success: function(result) {
                 location_id = result.location_id;
                 course_tree = result.course_tree;
-
-                // TODO: DELETE THESE
-                console.log(location_id);
-                console.log(course_tree);
-
             },
             async: false
         });
 
+        // TODO: DELETE THESE
+        console.log(location_id);
+        console.log(course_tree);
+
         // Override the LMS navigation
         if (course_tree["name"] !== "") {
 
-            $('.button-previous').toggle(false);
-            $('.button-next').toggle(false);
             unit_data = get_unit();
-
-            // Overrides go here
-
-            /*
-            Every affected item has "lmx_disabled" added to its class properties;
-            CSS will handle the visibility of these items.
-             */
 
             // Override chapter and subsection sidebar
             $("#accordion nav div").each(function(idxc, chapter) {
 
                 // Manipulate the chapters
-
                 $(chapter).css({
                     "visibility": "hidden",
                     "pointer-events": "none",
                     "background-color": "lightgrey"
                 });
 
-                var curr_chapter = course_tree['chapter'][idxc];
+                var curr_chapter = course_tree["chapter"][idxc];
                 if (curr_chapter) $(chapter).css({
                     "visibility": curr_chapter["visible"] ? "visible" : "hidden",
                     "pointer-events": curr_chapter["enabled"] ? "auto" : "none",
                     "background-color": curr_chapter["enabled"] ?
-                            ($(chapter).prop("class").indexOf("is-open") > -1) ? "white" : "lightgrey" :
-                            "grey"
+                        (($(chapter).prop("class").indexOf("is-open") > -1) ? "white" : "lightgrey") : "grey"
                 });
 
                 // Manipulate the subsections of each chapter
@@ -106,7 +119,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
                         "background-color": "grey"
                     });
 
-                    var curr_subsection = course_tree['chapter'][idxc]['subsection'][idxs];
+                    var curr_subsection = course_tree["chapter"][idxc]["subsection"][idxs];
                     if (curr_subsection) $(subsection).css({
                         "visibility": curr_subsection["visible"] ? "visible" : "hidden",
                         "pointer-events": curr_subsection["enabled"] ? "auto" : "none",
@@ -129,13 +142,12 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
                 var loc = course_tree["indexof"][$(unit).attr("data-id").split("@")[2]];
                 if (loc) {
 
-                    var curr_unit = course_tree['chapter'][loc[0]]['subsection'][loc[1]]['unit'][loc[2]];
+                    var curr_unit = course_tree["chapter"][loc[0]]["subsection"][loc[1]]["unit"][loc[2]];
                     if (curr_unit) $(unit).css({
                         "visibility": curr_unit["visible"] ? "visible": "hidden",
                         "pointer-events": curr_unit["enabled"] ? "auto": "none",
                         "background-color": curr_unit["enabled"] ?
-                            ($(unit).prop("class").indexOf(" active") > -1) ? "white" : "lightgrey":
-                            "grey"
+                            (($(unit).prop("class").indexOf(" active") > -1) ? "white" : "lightgrey") : "grey"
                    });
 
                 }
@@ -147,22 +159,19 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     }
 
     /*
-    Redirect to unit at specified indices.
-     */
+    Redirect to the unit at specified chapter, subsection, unit indices.
+    */
     function goto_unit(chapter, subsection, unit) {
 
         $.ajax({
             type: "POST",
-            url: runtime.handlerUrl(xblock_element, 'goto_unit'),
-            data: JSON.stringify(
-                {
+            url: runtime.handlerUrl(xblock_element, "goto_unit"),
+            data: JSON.stringify({
                     "chapter": chapter.toString(),
                     "subsection": subsection.toString(),
                     "unit": unit.toString()
-                }
-            ),
+            }),
             success: function(result) {
-
                 if (result.url) $(location).attr("href", result.url); // note, can get 404s if not careful
                 if (result.tab) $("#tab_" + result.tab).click();
                 if (result.error) console.log(result.error);
@@ -172,52 +181,76 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
     }
 
-    /*
-    Extends the specified chapter accordion
-     */
+    // Extends the specified chapter accordion
     function extend_chapter(chapter) {
         $("#ui-accordion-accordion-header-" + chapter + " > a").click();
     }
 
+    //
+    $(".lmx_lmx_controls").click(function() {
+       $(".lmx_controls").toggle();
+    });
+
+    // Toggle top navigation bar
+    $(".lmx_nav_top_bar").click(function() {
+        $(".sequence-nav").toggle();
+        $(".button-previous").toggle();
+        $(".button-next").toggle();
+    });
+
+    // Toggle top navigation bar buttons
+    $(".lmx_nav_top_bar_buttons").click(function() {
+        $(".button-previous").toggle();
+        $(".button-next").toggle();
+    });
+
+    // Toggle bottom navigation bars
+    $(".lmx_nav_bottom_bar").click(function() {
+        $(".sequence-bottom").toggle();
+    });
+
+    // Toggle top most LMS bar
+    $(".lmx_global_nav_bar").click(function() {
+        $("#global-navigation").toggle();
+    });
+
+    // Toggle second top most LMS bar
+    $(".lmx_course_material_bar").click(function() {
+        $(".course-material").toggle();
+    });
+
+    // Toggle LMS footer
+    $(".lmx_footer").click(function() {
+        $("div.wrapper.wrapper-footer").toggle();
+        $(".container-footer").toggle();
+    });
+
+    // For development
+    $(".lmx_sidebar_dev").click(function() {
+       $(".course-index").toggle();
+    });
+
+    // For development
+    $(".lmx_sidebar_toggle").click(function() {
+        $(".lmx_sidebar").toggle();
+    });
+
+    // For development
+    $(".lmx_complete_unit").click(function() {
+
+    });
+
     // Send the server the end of session message if using ComplexHTML
     function chx_session_end() {
-        $('.chx_end_session').click();
+        $(".chx_end_session").click();
     }
 
-    // Tell the server that this session is over
-    $('.lmx_prev').click(function() {
+    $(".lmx_prev").click(function() {
         chx_session_end(); // only works if using ComplexHTML
     });
 
-    $('.lmx_next').click(function() {
+    $(".lmx_next").click(function() {
         chx_session_end(); // only works if using ComplexHTML
-    });
-
-    $('.lmx_sidebar').click(function() {
-        $('.course-index').toggle();
-    });
-
-    $('.lmx_nav_top_bar').click(function() {
-        $('.sequence-nav').toggle();
-        $('.button-previous').toggle();
-        $('.button-next').toggle();
-    });
-
-    $('.lmx_nav_bottom_bar').click(function() {
-        $('.sequence-bottom').toggle();
-    });
-
-    $('.lmx_course_material_bar').click(function() {
-        $('.course-material').toggle();
-    });
-
-    $('.lmx_global_nav_bar').click(function() {
-        $('#global-navigation').toggle();
-    });
-
-    $('.lmx_footer').click(function() {
-        $('div.wrapper.wrapper-footer').toggle();
-        refresh_navigation();
     });
 
     $("#sequence-list > li > a").click(function() {
