@@ -1,5 +1,6 @@
 function LMSManipulatorXBlock(runtime, xblock_element) {
 
+    var location_id = "";
     var course_tree = {};
     var unit_data = {};
 
@@ -39,8 +40,6 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             async: false
         });
 
-        console.log(unit_data);
-
         return unit_data;
     }
 
@@ -53,9 +52,13 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             url: runtime.handlerUrl(xblock_element, 'refresh_navigation'),
             data: JSON.stringify({}),
             success: function(result) {
-                course_tree['name'] = result.name;
-                course_tree['chapter'] = result.chapter;
-                console.log(course_tree);   // TODO: DELETE ME
+                location_id = result.location_id;
+                course_tree = result.course_tree;
+
+                // TODO: DELETE THESE
+                console.log(location_id);
+                console.log(course_tree);
+
             },
             async: false
         });
@@ -77,19 +80,21 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             // Override chapter and subsection sidebar
             var curr_chapter = {};
             var curr_subsection = {};
-            $("#accordion nav div").each(function(idxc, div) {
+            $("#accordion nav div").each(function(idxc, chapter) {
 
+                // Manipulate the chapters
                 curr_chapter = course_tree['chapter'][idxc];
 
                 if (curr_chapter == undefined || !curr_chapter["enabled"])
-                    $(div).css({
+                    $(chapter).css({
                         "background-color": "lightgrey"
                     });
 
                 if (curr_chapter == undefined || !curr_chapter["visible"])
-                    $(div).prop("class", $(div).prop("class") + " lmx_hidden");
+                    $(chapter).prop("class", $(div).prop("class") + " lmx_hidden");
 
-                $(div).children("ul").children("li").each(function(idxs, li) {
+                // Manipulate the subsections of each chapter
+                $(chapter).children("ul").children("li").each(function(idxs, li) {
                     curr_subsection = course_tree['chapter'][idxc]['subsection'][idxs];
 
                     if (curr_subsection == undefined || !curr_subsection["enabled"])
@@ -106,18 +111,25 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
             });
 
             // Override subsection tabs (ie units)
-            var curr_unit = {};
-            $("#sequence-list li").each(function(idx, li) {
-                curr_unit = course_tree['chapter'][unit_data.chapter]['subsection'][unit_data.subsection]['unit'][idx];
+            $("#sequence-list li a").each(function(idx, unit) {
 
-                if (curr_unit == undefined || !curr_unit["enabled"])
-                    $(li).css({
-                        "pointer-events": "none",
-                        "background-color": "grey"
-                    });
+                $(unit).css({
+                    "visibility": "hidden",
+                    "pointer-events": "none",
+                    "background-color": "grey"
+                });
 
-                if (curr_unit == undefined || !curr_unit["visible"])
-                    $(li).prop("class", $(li).prop("class") + " lmx_hidden");
+                var loc = course_tree["indexof"][$(unit).attr("data-id").split("@")[2]];
+                if (loc) {
+                    var curr_unit = course_tree['chapter'][loc[0]]['subsection'][loc[1]]['unit'][loc[2]];
+                    if (curr_unit) $(unit).css({
+                        "visibility": curr_unit["visible"] ? "visible": "hidden",
+                        "pointer-events": curr_unit["enabled"] ? "auto": "none",
+                        "background-color": curr_unit["enabled"] ?
+                            ($(unit).prop("class").indexOf(" active") > -1) ? "white" : "lightgrey":
+                            "grey"
+                   });
+                }
 
             });
 
@@ -207,23 +219,24 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
         chx_session_end(); // only works if using ComplexHTML
     });
 
+    function clearUnit() {
+
+        $(".lmx_error").show();
+        /*
+        for (var i=0; i < $(".vert-mod > div").length; i++) {
+            if ($(("#seq_content > div > div > div.vert.vert-" + i)).attr("data-id").indexOf("lmsmanipulator+block") == -1)
+                $((".vert-" + i)).empty();
+        }
+        */
+
+    }
+
     $(function ($) {
 
+        if (unit_data["visible"] === false || unit_data["enabled"] === false) clearUnit();
+        if (unit_data["completed"] === true) $(".lmx_completed").show();
+
         refresh_navigation();
-
-        if (unit_data["visible"] === false) {
-
-            $(".lmx_error").show();
-            for (var i=0; i < $(".vert-mod > div").length; i++) {
-	            if ($(("#seq_content > div > div > div.vert.vert-" + i)).attr("data-id").indexOf("lmsmanipulator+block") == -1)
-                    $((".vert-" + i)).empty();
-            }
-
-        }
-
-        if (unit_data["completed"] === true) {
-            $(".lmx_completed").show();
-        }
 
     });
 

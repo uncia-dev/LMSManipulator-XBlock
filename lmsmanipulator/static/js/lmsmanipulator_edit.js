@@ -32,6 +32,7 @@ function LMSManipulatorXBlockStudio(runtime, xblock_element) {
                 url: runtime.handlerUrl(xblock_element, 'studio_save'),
                 data: JSON.stringify({
                     "display_name": $('.lmx_display_name').val(),
+                    "hide_controls": $('.lmx_hide_controls').prop('checked') ? 1 : 0,
                     "hide_global_nav_bar": $('.lmx_hide_global_nav_bar').prop('checked') ? 1 : 0,
                     "hide_course_material_bar": $('.lmx_hide_course_material_bar').prop('checked') ? 1 : 0,
                     "hide_nav_buttons": $('.lmx_hide_nav_buttons').prop('checked') ? 1 : 0,

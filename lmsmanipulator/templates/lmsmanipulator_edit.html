@@ -4,6 +4,10 @@
     <input type="text" class="lmx_display_name" value="{{ self.display_name }}">
     <br/>
 
+    <p class="lmx_desc">Hide controls</p>
+    <input type="checkbox" class="lmx_hide_controls" {% if self.hide_controls %} checked {% endif %}>
+    <br/>
+
     <p class="lmx_desc">Hide global navigation bar</p>
     <input type="checkbox" class="lmx_hide_global_nav_bar" {% if self.hide_global_nav_bar %} checked {% endif %}>
     <br/>

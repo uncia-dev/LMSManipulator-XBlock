@@ -8,13 +8,11 @@
         <p>You have completed this unit.</p>
     </div>
 
-    <div class="lmx_controls">
-        <a class="lmx_global_nav_bar" hidden>Global Navigation Bar | </a>
-        <a class="lmx_course_material_bar" hidden>Course Material Bar | </a>
-        <a class="lmx_nav_top_bar" hidden>Top Navigation Bar | </a>
-        <a class="lmx_nav_bottom_bar" hidden>Bottom Navigation Bar | </a>
-        <a class="lmx_footer" hidden>Footer | </a>
-        <a class="lmx_sidebar" {% if not self.toggle_sidebar or self.hide_bar %} hidden {% endif %}>Sidebar | </a>
+    <div class="lmx_sidebar_control">
+        <a class="lmx_sidebar" {% if not self.toggle_sidebar or self.hide_bar %} hidden {% endif %}>Sidebar</a>
+    </div>
+
+    <div class="lmx_controls" {% if self.hide_controls %} hidden {% endif %}>
         <a class="lmx_prev">Previous | </a>
         <a class="lmx_next">Next</a>
     </div>
@@ -37,6 +35,10 @@
 
         <h4>Display name</h4>
         <p>{{ self.display_name }}</p>
+        <br/>
+
+        <h4>Hide LMX Control Bar?</h4>
+        <p>{{ self.hide_controls }}</p>
         <br/>
 
         <h4>Hide Global Navigation Bar?</h4>
