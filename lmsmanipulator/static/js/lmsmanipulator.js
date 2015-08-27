@@ -78,33 +78,40 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
              */
 
             // Override chapter and subsection sidebar
-            var curr_chapter = {};
-            var curr_subsection = {};
             $("#accordion nav div").each(function(idxc, chapter) {
 
                 // Manipulate the chapters
-                curr_chapter = course_tree['chapter'][idxc];
 
-                if (curr_chapter == undefined || !curr_chapter["enabled"])
-                    $(chapter).css({
-                        "background-color": "lightgrey"
-                    });
+                $(chapter).css({
+                    "visibility": "hidden",
+                    "pointer-events": "none",
+                    "background-color": "lightgrey"
+                });
 
-                if (curr_chapter == undefined || !curr_chapter["visible"])
-                    $(chapter).prop("class", $(div).prop("class") + " lmx_hidden");
+                var curr_chapter = course_tree['chapter'][idxc];
+                if (curr_chapter) $(chapter).css({
+                    "visibility": curr_chapter["visible"] ? "visible" : "hidden",
+                    "pointer-events": curr_chapter["enabled"] ? "auto" : "none",
+                    "background-color": curr_chapter["enabled"] ?
+                            ($(chapter).prop("class").indexOf("is-open") > -1) ? "white" : "lightgrey" :
+                            "grey"
+                });
 
                 // Manipulate the subsections of each chapter
-                $(chapter).children("ul").children("li").each(function(idxs, li) {
-                    curr_subsection = course_tree['chapter'][idxc]['subsection'][idxs];
+                $(chapter).children("ul").children("li").each(function (idxs, subsection) {
 
-                    if (curr_subsection == undefined || !curr_subsection["enabled"])
-                        $(li).css({
-                               "pointer-events": "none",
-                               "background-color": "lightgrey"
-                        });
+                    $(subsection).css({
+                        "visibility": "hidden",
+                        "pointer-events": "none",
+                        "background-color": "grey"
+                    });
 
-                    if (curr_subsection == undefined || !curr_subsection["visible"])
-                        $(li).prop("class", $(li).prop("class") + " lmx_hidden");
+                    var curr_subsection = course_tree['chapter'][idxc]['subsection'][idxs];
+                    if (curr_subsection) $(subsection).css({
+                        "visibility": curr_subsection["visible"] ? "visible" : "hidden",
+                        "pointer-events": curr_subsection["enabled"] ? "auto" : "none",
+                        "background-color": curr_subsection["enabled"] ? "" : "grey"
+                    });
 
                 });
 
@@ -121,6 +128,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
 
                 var loc = course_tree["indexof"][$(unit).attr("data-id").split("@")[2]];
                 if (loc) {
+
                     var curr_unit = course_tree['chapter'][loc[0]]['subsection'][loc[1]]['unit'][loc[2]];
                     if (curr_unit) $(unit).css({
                         "visibility": curr_unit["visible"] ? "visible": "hidden",
@@ -129,6 +137,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
                             ($(unit).prop("class").indexOf(" active") > -1) ? "white" : "lightgrey":
                             "grey"
                    });
+
                 }
 
             });
@@ -222,21 +231,17 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     function clearUnit() {
 
         $(".lmx_error").show();
-        /*
-        for (var i=0; i < $(".vert-mod > div").length; i++) {
+        for (var i=0; i < $(".vert-mod > div").length; i++)
             if ($(("#seq_content > div > div > div.vert.vert-" + i)).attr("data-id").indexOf("lmsmanipulator+block") == -1)
                 $((".vert-" + i)).empty();
-        }
-        */
 
     }
 
     $(function ($) {
 
+        refresh_navigation();
         if (unit_data["visible"] === false || unit_data["enabled"] === false) clearUnit();
         if (unit_data["completed"] === true) $(".lmx_completed").show();
-
-        refresh_navigation();
 
     });
 

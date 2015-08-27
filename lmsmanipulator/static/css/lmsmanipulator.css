@@ -6,16 +6,12 @@
     text-align: center;
 }
 
-.lmx_error {
+.lmx_error p {
     text-align: center;
     color: red;
 }
 
-.lmx_chapter_disabled {
-    background-color: grey;
-}
-
-.lmx_hidden {
-    visibility: hidden;
-    pointer-events: none;
+.lmx_completed p {
+    text-align: center;
+    color: darkgreen;
 }

@@ -4,13 +4,8 @@
     <list default="true" id="6e7efdab-8300-4ca7-b101-71c30568410e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.~lock.sample.csv#" afterPath="$PROJECT_DIR$/.~lock.sample.csv#" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css" afterPath="$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator.html" afterPath="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js" afterPath="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py" afterPath="$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator_edit.html" afterPath="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator_edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator_edit.js" afterPath="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator_edit.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sample.csv" afterPath="$PROJECT_DIR$/sample.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="LMSManipulator-XBlock.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
+              <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -82,21 +77,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lmsmanipulator.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lmsmanipulator.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1786108">
-              <caret line="87" column="20" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="235" column="34" selection-start-line="235" selection-start-column="34" selection-end-line="235" selection-end-column="39" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lmsmanipulator.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lmsmanipulator.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.759259">
-              <caret line="164" column="40" selection-start-line="164" selection-start-column="40" selection-end-line="164" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.35313532">
+              <caret line="190" column="46" selection-start-line="190" selection-start-column="46" selection-end-line="190" selection-end-column="46" />
               <folding>
                 <element signature="e#250#291#0" expanded="true" />
               </folding>
@@ -115,12 +110,12 @@
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/lmsmanipulator/edxappCourseData.py" />
         <option value="$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator_edit.css" />
-        <option value="$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css" />
         <option value="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator_edit.html" />
         <option value="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator_edit.js" />
         <option value="$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator.html" />
-        <option value="$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py" />
         <option value="$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js" />
+        <option value="$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css" />
+        <option value="$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py" />
       </list>
     </option>
   </component>
@@ -713,26 +708,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator_edit.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="85" selection-start-line="34" selection-start-column="85" selection-end-line="34" selection-end-column="85" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator_edit.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.6666665">
-          <caret line="7" column="77" selection-start-line="7" selection-start-column="77" selection-end-line="7" selection-end-column="77" />
           <folding />
         </state>
       </provider>
@@ -745,21 +724,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py">
+    <entry file="file://$PROJECT_DIR$/lmsmanipulator/templates/lmsmanipulator_edit.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.759259">
-          <caret line="164" column="40" selection-start-line="164" selection-start-column="40" selection-end-line="164" selection-end-column="40" />
-          <folding>
-            <element signature="e#250#291#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-4.6666665">
+          <caret line="7" column="77" selection-start-line="7" selection-start-column="77" selection-end-line="7" selection-end-column="77" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lmsmanipulator/static/js/lmsmanipulator.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1786108">
-          <caret line="87" column="20" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="235" column="34" selection-start-line="235" selection-start-column="34" selection-end-line="235" selection-end-column="39" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lmsmanipulator/static/css/lmsmanipulator.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lmsmanipulator/lmsmanipulator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35313532">
+          <caret line="190" column="46" selection-start-line="190" selection-start-column="46" selection-end-line="190" selection-end-column="46" />
+          <folding>
+            <element signature="e#250#291#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
