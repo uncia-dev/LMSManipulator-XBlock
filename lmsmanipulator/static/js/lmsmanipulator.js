@@ -5,6 +5,8 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     var unit_data = {}; // data of current unit
 
     // Set component visibilities depending on the Studio side settings
+    // Note, the logic here is flipped, since toggle(false) hides an object, while toggle(true) shows it
+    // So when an entry is True in the backend, we will want to flip the boolean logic here in order to hide an item.
     $(".course-index").toggle("{{ self.hide_bar }}" == "False");
     $("#global-navigation").toggle("{{ self.hide_global_nav_bar }}" == "False");
     $(".course-material").toggle("{{ self.hide_course_material_bar }}" == "False");
@@ -16,18 +18,40 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     $("div.wrapper.wrapper-footer").toggle("{{ self.hide_footer }}" == "False");
     $(".container-footer").toggle("{{ self.hide_footer }}" == "False");
 
-    if ("{{ self.hide_sidebar }}" == "False" ) {
+    if ("{{ self.hide_sidebar }}" == "False") {
 
-        $("<div class=\"lmx_sidebar\" role=\"navigation\"></div>").insertAfter(".course-index");
-        $(".lmx_sidebar").css({
-            "display": "table-cell",
-            "width": "5px",
-            "border-width": "1px",
-            "background-color": "gray"
-        }).hover(
-            function() { $(this).css("background-color", "#0078B0");},
-            function() { $(this).css("background-color", "gray"); }
-        ).click(function() { $(".course-index").toggle(); });
+        // Inject sidebar toggle bar only if none is yet present
+        if ($(".lmx_sidebar").length == 0) {
+
+            $("<div class=\"lmx_sidebar\" role=\"navigation\" show=\"false\"></div>").insertAfter(".course-index");
+            $(".lmx_sidebar").css({
+                "display": "table-cell",
+                "width": "5px",
+                "border-width": "1px",
+                "background-color": "gray"
+            }).hover(
+                function () {
+                    $(this).css("background-color", "#0078B0");
+                },
+                function () {
+                    $(this).css("background-color", "gray");
+                }
+            ).attr("show", true
+            ).click(
+                function () {
+                    $(".lmx_sidebar").attr("show", ($(".course-index").toggle().css("display") != "none"));
+                }
+            );
+
+        } else {
+
+            console.log('exists');
+            console.log($(".lmx_sidebar").attr("show"));
+            console.log($(".course-index").css("display"));
+
+            $(".course-index").toggle($(".lmx_sidebar").attr("show") == "true");
+
+        }
 
     }
 
