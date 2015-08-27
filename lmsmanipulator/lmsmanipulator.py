@@ -70,12 +70,6 @@ class LMSManipulatorXBlock(XBlock):
         scope=Scope.content
     )
 
-    toggle_sidebar = Boolean(
-        default=True,
-        help='Toggle side bar in LMS',
-        scope=Scope.content
-    )
-
     hide_footer = Boolean(
         default=False,
         help='Hide footer',
@@ -103,6 +97,18 @@ class LMSManipulatorXBlock(XBlock):
     dev_stuff = Boolean(
         help='Show chx_dev_stuff div in LMS?',
         default=False,
+        scope=Scope.content
+    )
+
+    unit_prev = String(
+        default='',
+        help='URL of the previous unit in the sequence.',
+        scope=Scope.content
+    )
+
+    unit_next = String(
+        default='',
+        help='URL of the next unit in the sequence.',
         scope=Scope.content
     )
 
@@ -348,6 +354,11 @@ class LMSManipulatorXBlock(XBlock):
 
         return content
 
+    '''
+    def goto_unit_prev
+    def goto_unit_next
+    '''
+
     def course_tree_refresh(self):
         '''
         Read course tree and assign returned values to course_tree
@@ -428,13 +439,10 @@ class LMSManipulatorXBlock(XBlock):
             self.hide_nav = data['hide_nav'] == 1
             self.hide_sequence_bottom = data['hide_sequence_bottom'] == 1
             self.hide_sidebar = data['hide_sidebar'] == 1
-            self.toggle_sidebar = data['toggle_sidebar'] == 1
             self.hide_footer = data['hide_footer'] == 1
+            self.unit_prev = data['unit_prev']
+            self.unit_next = data['unit_next']
             self.dev_stuff = data['dev_stuff'] == 1
-
-            if self.hide_sidebar:
-                self.toggle_sidebar = False
-
             self.course_url = data['course_url']
             self.location_id = data['location_id']
             self.csv_url = data['csv_url']

@@ -16,8 +16,7 @@ function LMSManipulatorXBlock(runtime, xblock_element) {
     $("div.wrapper.wrapper-footer").toggle("{{ self.hide_footer }}" == "False");
     $(".container-footer").toggle("{{ self.hide_footer }}" == "False");
 
-    // Add toggle sidebar button
-    if ("{{ self.toggle_sidebar }}" == "True") {
+    if ("{{ self.hide_sidebar }}" == "False" ) {
 
         $("<div class=\"lmx_sidebar\" role=\"navigation\"></div>").insertAfter(".course-index");
         $(".lmx_sidebar").css({
